@@ -8,8 +8,6 @@ import Profile from './Profile';
 import Notification from './Notification';
 import MobileSection from './MobileSection';
 
-// ==============================|| HEADER - CONTENT ||============================== //
-
 const HeaderContent = () => {
     const matchesXs = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
@@ -20,7 +18,7 @@ const HeaderContent = () => {
 
             <IconButton
                 component={Link}
-                href="https://github.com/codedthemes/mantis-free-react-admin-template"
+                href=""
                 target="_blank"
                 disableRipple
                 color="secondary"

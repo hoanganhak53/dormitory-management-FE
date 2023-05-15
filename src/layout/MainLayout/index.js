@@ -15,8 +15,6 @@ import Breadcrumbs from 'components/@extended/Breadcrumbs';
 // types
 import { openDrawer } from 'store/reducers/menu';
 
-// ==============================|| MAIN LAYOUT ||============================== //
-
 const MainLayout = () => {
     const theme = useTheme();
     const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
