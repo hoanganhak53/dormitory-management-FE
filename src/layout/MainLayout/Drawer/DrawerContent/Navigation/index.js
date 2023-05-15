@@ -8,7 +8,22 @@ import menuItem from 'menu-items';
 // ==============================|| DRAWER CONTENT - NAVIGATION ||============================== //
 
 const Navigation = () => {
-    const navGroups = menuItem.items.map((item) => {
+    const role = localStorage.getItem('role');
+    let menus = [];
+    switch (role) {
+        case '1':
+            menus = menuItem.student;
+            break;
+        case '2':
+            menus = menuItem.manager;
+            break;
+        case '3':
+            menus = menuItem.admin;
+            break;
+        default:
+            break;
+    }
+    const navGroups = menus.map((item) => {
         switch (item.type) {
             case 'group':
                 return <NavGroup key={item.id} item={item} />;

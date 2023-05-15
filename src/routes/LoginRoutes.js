@@ -21,6 +21,10 @@ const LoginRoutes = {
         {
             path: 'register',
             element: <AuthRegister />
+        },
+        {
+            path: 'portal',
+            element: <div />
         }
     ]
 };

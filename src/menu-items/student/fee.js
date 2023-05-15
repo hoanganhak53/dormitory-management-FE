@@ -9,28 +9,26 @@ const icons = {
 
 // ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
 
-const support = {
-    id: 'support',
-    title: 'Support',
+const fee = {
+    id: 'fee',
+    title: 'Hóa đơn',
     type: 'group',
     children: [
         {
-            id: 'sample-page',
-            title: 'Sample Page',
+            id: 'service-fee',
+            title: 'Dịch vụ',
             type: 'item',
             url: '/sample-page',
             icon: icons.ChromeOutlined
         },
         {
-            id: 'documentation',
-            title: 'Documentation',
+            id: 'room-fee',
+            title: 'Tiền phòng',
             type: 'item',
-            url: 'https://codedthemes.gitbook.io/mantis-react/',
-            icon: icons.QuestionOutlined,
-            external: true,
-            target: true
+            url: '/sample-page',
+            icon: icons.QuestionOutlined
         }
     ]
 };
 
-export default support;
+export default fee;

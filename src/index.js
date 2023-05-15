@@ -20,10 +20,27 @@ import reportWebVitals from './reportWebVitals';
 
 const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
+const role = localStorage.getItem('role');
+let basename = '';
+switch (role) {
+    case '1':
+        basename = 'student';
+        break;
+    case '2':
+        basename = 'manager';
+        break;
+    case '3':
+        basename = 'admin';
+        break;
+    default:
+        basename = 'student';
+        break;
+}
+
 root.render(
     <StrictMode>
         <ReduxProvider store={store}>
-            <BrowserRouter basename="/free">
+            <BrowserRouter basename={`/${basename}`}>
                 <App />
             </BrowserRouter>
         </ReduxProvider>

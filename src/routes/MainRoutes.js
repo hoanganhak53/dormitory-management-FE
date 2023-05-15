@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
+import { Navigate } from '../../node_modules/react-router-dom/dist/index';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -17,18 +18,15 @@ const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
 const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
 
 // ==============================|| MAIN ROUTING ||============================== //
+const role = localStorage.getItem('role');
 
 const MainRoutes = {
     path: '/',
-    element: <MainLayout />,
+    element: role ? <MainLayout /> : <Navigate to="/login" />,
     children: [
         {
             path: '/',
             element: <DashboardDefault />
-        },
-        {
-            path: 'color',
-            element: <Color />
         },
         {
             path: 'dashboard',
@@ -57,5 +55,21 @@ const MainRoutes = {
         }
     ]
 };
+
+//protected routes
+switch (role) {
+    case '1':
+        MainRoutes.children.push({
+            path: 'color',
+            element: <Color />
+        });
+        break;
+    case '2':
+        break;
+    case '3':
+        break;
+    default:
+        break;
+}
 
 export default MainRoutes;
