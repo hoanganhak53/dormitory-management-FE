@@ -1,5 +1,13 @@
+import Carousel from './Carousel';
+import Footer from './Footer';
+
 const MainPortal = () => {
-    return <div>MainPortal</div>;
+    return (
+        <>
+            <Carousel />
+            <Footer />
+        </>
+    );
 };
 
 export default MainPortal;

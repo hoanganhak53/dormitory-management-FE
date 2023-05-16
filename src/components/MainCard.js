@@ -32,6 +32,7 @@ const MainCard = forwardRef(
             sx = {},
             title,
             codeHighlight,
+            bgColor,
             ...others
         },
         ref
@@ -49,6 +50,7 @@ const MainCard = forwardRef(
                     border: border ? '1px solid' : 'none',
                     borderRadius: 2,
                     borderColor: theme.palette.mode === 'dark' ? theme.palette.divider : theme.palette.grey.A800,
+                    backgroundColor: bgColor ? bgColor : '#fff',
                     boxShadow: boxShadow && (!border || theme.palette.mode === 'dark') ? shadow || theme.customShadows.z1 : 'inherit',
                     ':hover': {
                         boxShadow: boxShadow ? shadow || theme.customShadows.z1 : 'inherit'
@@ -103,7 +105,8 @@ MainCard.propTypes = {
     title: PropTypes.string,
     codeHighlight: PropTypes.bool,
     content: PropTypes.bool,
-    children: PropTypes.node
+    children: PropTypes.node,
+    bgColor: PropTypes.string
 };
 
 export default MainCard;

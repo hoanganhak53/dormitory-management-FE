@@ -25,7 +25,7 @@ import MonthlyBarChart from './MonthlyBarChart';
 import ReportAreaChart from './ReportAreaChart';
 import SalesColumnChart from './SalesColumnChart';
 import MainCard from 'components/MainCard';
-import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
+import OverviewCard from 'components/cards/statistics/OverviewCard';
 
 // assets
 import { GiftOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons';
@@ -33,6 +33,7 @@ import avatar1 from 'assets/images/users/avatar-1.png';
 import avatar2 from 'assets/images/users/avatar-2.png';
 import avatar3 from 'assets/images/users/avatar-3.png';
 import avatar4 from 'assets/images/users/avatar-4.png';
+import StudentInfo from './StudentInfo';
 
 // avatar style
 const avatarSX = {
@@ -75,62 +76,50 @@ const DashboardDefault = () => {
 
     return (
         <Grid container rowSpacing={4.5} columnSpacing={2.75}>
-            {/* row 1 */}
             <Grid item xs={12} sx={{ mb: -2.25 }}>
-                <Typography variant="h5">Dashboard</Typography>
+                <Typography variant="h5">Thông tin sinh viên</Typography>
+            </Grid>
+            <Grid item xs={12} md={10} lg={12}>
+                <StudentInfo />
+            </Grid>
+            <Grid item xs={12} sx={{ mb: -2.25 }}>
+                <Typography variant="h5">Tổng quan</Typography>
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <AnalyticEcommerce title="Total Page Views" count="4,42,236" percentage={59.3} extra="35,000" />
+                <OverviewCard title="Sinh viên" count="13,236" des="Tổng số tài khoản" bgColor="success.main" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <AnalyticEcommerce title="Total Users" count="78,250" percentage={70.5} extra="8,900" />
+                <OverviewCard title="Cán bộ" count="23" des="Tổng tài khoản cán bộ" bgColor="error.main" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <AnalyticEcommerce title="Total Order" count="18,800" percentage={27.4} isLoss color="warning" extra="1,943" />
+                <OverviewCard title="Đăng ký" count="2,236" des="Tổng số đăng ký trong kỳ" bgColor="warning.main" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-                <AnalyticEcommerce title="Total Sales" count="$35,078" percentage={27.4} isLoss color="warning" extra="$20,395" />
+                <OverviewCard title="Phòng" count="342" des="Tổng số phòng" bgColor="primary.main" />
             </Grid>
-
             <Grid item md={8} sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} />
-
-            {/* row 2 */}
-            <Grid item xs={12} md={7} lg={8}>
+            <Grid item xs={12} md={6} lg={6}>
                 <Grid container alignItems="center" justifyContent="space-between">
                     <Grid item>
-                        <Typography variant="h5">Unique Visitor</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Stack direction="row" alignItems="center" spacing={0}>
-                            <Button
-                                size="small"
-                                onClick={() => setSlot('month')}
-                                color={slot === 'month' ? 'primary' : 'secondary'}
-                                variant={slot === 'month' ? 'outlined' : 'text'}
-                            >
-                                Month
-                            </Button>
-                            <Button
-                                size="small"
-                                onClick={() => setSlot('week')}
-                                color={slot === 'week' ? 'primary' : 'secondary'}
-                                variant={slot === 'week' ? 'outlined' : 'text'}
-                            >
-                                Week
-                            </Button>
-                        </Stack>
+                        <Typography variant="h5">Tiền dịch vụ</Typography>
                     </Grid>
                 </Grid>
-                <MainCard content={false} sx={{ mt: 1.5 }}>
-                    <Box sx={{ pt: 1, pr: 2 }}>
-                        <IncomeAreaChart slot={slot} />
+                <MainCard sx={{ mt: 2 }} content={false}>
+                    <Box sx={{ p: 3, pb: 0 }}>
+                        <Stack spacing={2}>
+                            <Typography variant="h6" color="textSecondary">
+                                This Week Statistics
+                            </Typography>
+                            <Typography variant="h3">$7,650</Typography>
+                        </Stack>
                     </Box>
+                    <MonthlyBarChart />
                 </MainCard>
             </Grid>
-            <Grid item xs={12} md={5} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
                 <Grid container alignItems="center" justifyContent="space-between">
                     <Grid item>
-                        <Typography variant="h5">Income Overview</Typography>
+                        <Typography variant="h5">Tiền phòng</Typography>
                     </Grid>
                     <Grid item />
                 </Grid>
@@ -146,9 +135,8 @@ const DashboardDefault = () => {
                     <MonthlyBarChart />
                 </MainCard>
             </Grid>
-
             {/* row 3 */}
-            <Grid item xs={12} md={7} lg={8}>
+            {/* <Grid item xs={12} md={7} lg={8}>
                 <Grid container alignItems="center" justifyContent="space-between">
                     <Grid item>
                         <Typography variant="h5">Recent Orders</Typography>
@@ -186,7 +174,7 @@ const DashboardDefault = () => {
             </Grid>
 
             {/* row 4 */}
-            <Grid item xs={12} md={7} lg={8}>
+            {/* <Grid item xs={12} md={7} lg={8}>
                 <Grid container alignItems="center" justifyContent="space-between">
                     <Grid item>
                         <Typography variant="h5">Sales Report</Typography>
@@ -217,8 +205,8 @@ const DashboardDefault = () => {
                     </Stack>
                     <SalesColumnChart />
                 </MainCard>
-            </Grid>
-            <Grid item xs={12} md={5} lg={4}>
+            </Grid> */}
+            {/* <Grid item xs={12} md={5} lg={4}>
                 <Grid container alignItems="center" justifyContent="space-between">
                     <Grid item>
                         <Typography variant="h5">Transaction History</Typography>
@@ -339,7 +327,7 @@ const DashboardDefault = () => {
                         </Button>
                     </Stack>
                 </MainCard>
-            </Grid>
+            </Grid> */}
         </Grid>
     );
 };

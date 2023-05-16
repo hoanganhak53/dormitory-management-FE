@@ -81,6 +81,22 @@ const Profile = () => {
 
     const iconBackColorOpen = 'grey.300';
 
+    const role = localStorage.getItem('role');
+    let role_name = '';
+    switch (role) {
+        case '1':
+            role_name = 'Sinh viên';
+            break;
+        case '2':
+            role_name = 'Quản lý tòa nhà';
+            break;
+        case '3':
+            role_name = 'Quản lý ký túc xá';
+            break;
+        default:
+            break;
+    }
+
     return (
         <Box sx={{ flexShrink: 0, ml: 0.75 }}>
             <ButtonBase
@@ -98,7 +114,7 @@ const Profile = () => {
             >
                 <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
                     <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
-                    <Typography variant="subtitle1">John Doe</Typography>
+                    <Typography variant="subtitle1">Hoàng Anh</Typography>
                 </Stack>
             </ButtonBase>
             <Popper
@@ -143,7 +159,7 @@ const Profile = () => {
                                                         <Stack>
                                                             <Typography variant="h6">John Doe</Typography>
                                                             <Typography variant="body2" color="textSecondary">
-                                                                UI/UX Designer
+                                                                {role_name}
                                                             </Typography>
                                                         </Stack>
                                                     </Stack>

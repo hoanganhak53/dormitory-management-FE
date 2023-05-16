@@ -1,6 +1,5 @@
 // material-ui
-import { Box, IconButton, Link, useMediaQuery } from '@mui/material';
-import { GithubOutlined } from '@ant-design/icons';
+import { Box, useMediaQuery } from '@mui/material';
 
 // project import
 import Search from './Search';
@@ -15,18 +14,6 @@ const HeaderContent = () => {
         <>
             {!matchesXs && <Search />}
             {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-
-            <IconButton
-                component={Link}
-                href=""
-                target="_blank"
-                disableRipple
-                color="secondary"
-                title="Download Free Version"
-                sx={{ color: 'text.primary', bgcolor: 'grey.100' }}
-            >
-                <GithubOutlined />
-            </IconButton>
 
             <Notification />
             {!matchesXs && <Profile />}
