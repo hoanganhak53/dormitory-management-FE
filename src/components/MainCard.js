@@ -33,6 +33,7 @@ const MainCard = forwardRef(
             title,
             codeHighlight,
             bgColor,
+            np,
             ...others
         },
         ref
@@ -57,7 +58,7 @@ const MainCard = forwardRef(
                     },
                     '& pre': {
                         m: 0,
-                        p: '16px !important',
+                        p: !np ? '16px !important' : '0px !important',
                         fontFamily: theme.typography.fontFamily,
                         fontSize: '0.75rem'
                     }
@@ -106,7 +107,8 @@ MainCard.propTypes = {
     codeHighlight: PropTypes.bool,
     content: PropTypes.bool,
     children: PropTypes.node,
-    bgColor: PropTypes.string
+    bgColor: PropTypes.string,
+    np: PropTypes.bool
 };
 
 export default MainCard;

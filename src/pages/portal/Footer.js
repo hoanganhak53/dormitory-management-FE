@@ -10,16 +10,17 @@ const Footer = () => {
                 height: '200px',
                 paddingTop: 4,
                 paddingBottom: '1rem',
-                textAlign: 'center'
+                textAlign: 'center',
+                backgroundColor: 'secondary.dark'
             }}
         >
             <Container maxWidth="lg">
                 <Grid container direction="column" alignItems="center">
                     <Stack direction="row" alignItems="center" mb="15px">
-                        <Logo />
+                        <Logo color="white" />
                     </Stack>
                     <Grid item xs={12}>
-                        <Typography color="" variant="h5">
+                        <Typography color="white" variant="h5">
                             Hệ thống hỗ trợ quản lý ký túc xá
                         </Typography>
                     </Grid>
@@ -57,7 +58,7 @@ const Footer = () => {
                         </svg>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography color="gray" variant="sm" sx={{ fontSize: '11px' }}>
+                        <Typography color="secondary.light" variant="sm" sx={{ fontSize: '11px' }}>
                             {`@ ${new Date().getFullYear()} NDHA. All rights reserved`}
                         </Typography>
                     </Grid>
