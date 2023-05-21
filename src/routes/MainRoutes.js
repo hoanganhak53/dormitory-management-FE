@@ -8,14 +8,17 @@ import { Navigate } from '../../node_modules/react-router-dom/dist/index';
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 
-// render - sample page
-const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
+// render - registration page
+const RegistrationCurrent = Loadable(lazy(() => import('pages/registration/current/RegistrationCurrent')));
+const RegistrationSemester = Loadable(lazy(() => import('pages/registration/semester/RegistrationSemester')));
+
+// render - registration page
+const AccountProfile = Loadable(lazy(() => import('pages/account/profile/AccountProfile')));
+const AccountMore = Loadable(lazy(() => import('pages/account/more/AccountMore')));
 
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
 const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
-const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
-const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 const role = localStorage.getItem('role');
@@ -30,6 +33,7 @@ const MainRoutes = {
         },
         {
             path: 'dashboard',
+            element: <DashboardDefault />,
             children: [
                 {
                     path: 'default',
@@ -38,20 +42,29 @@ const MainRoutes = {
             ]
         },
         {
-            path: 'sample-page',
-            element: <SamplePage />
+            path: 'registration',
+            children: [
+                {
+                    path: 'semester',
+                    element: <RegistrationSemester />
+                },
+                {
+                    path: 'current',
+                    element: <RegistrationCurrent />
+                }
+            ]
         },
         {
-            path: 'shadow',
-            element: <Shadow />
+            path: 'profile',
+            element: <AccountProfile />
+        },
+        {
+            path: 'more',
+            element: <AccountMore />
         },
         {
             path: 'typography',
             element: <Typography />
-        },
-        {
-            path: 'icons/ant',
-            element: <AntIcons />
         }
     ]
 };

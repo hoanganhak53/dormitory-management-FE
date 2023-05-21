@@ -1,10 +1,10 @@
 // assets
-import { ChromeOutlined, QuestionOutlined } from '@ant-design/icons';
+import { DollarOutlined, ExceptionOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
-    ChromeOutlined,
-    QuestionOutlined
+    DollarOutlined,
+    ExceptionOutlined
 };
 
 // ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
@@ -19,14 +19,14 @@ const fee = {
             title: 'Dịch vụ',
             type: 'item',
             url: '/sample-page',
-            icon: icons.ChromeOutlined
+            icon: icons.DollarOutlined
         },
         {
             id: 'room-fee',
             title: 'Tiền phòng',
             type: 'item',
             url: '/sample-page',
-            icon: icons.QuestionOutlined
+            icon: icons.ExceptionOutlined
         }
     ]
 };

@@ -16,19 +16,19 @@ const dashboard = {
     type: 'group',
     children: [
         {
-            id: 'dashboard',
-            title: 'Bảng điều khiển',
-            type: 'item',
-            url: '/dashboard/default',
-            icon: icons.DashboardOutlined,
-            breadcrumbs: false
-        },
-        {
             id: 'portal',
             title: 'Trang chủ',
             type: 'item',
             url: '/portal',
             icon: icons.HomeOutlined,
+            breadcrumbs: false
+        },
+        {
+            id: 'dashboard',
+            title: 'Bảng điều khiển',
+            type: 'item',
+            url: '/dashboard',
+            icon: icons.DashboardOutlined,
             breadcrumbs: false
         }
     ]

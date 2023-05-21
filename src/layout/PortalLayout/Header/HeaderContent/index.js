@@ -1,6 +1,6 @@
 import Logo from 'components/Logo/Logo';
-import { Box, ButtonBase, Stack, Typography } from '../../../../../node_modules/@mui/material/index';
-import { useNavigate } from '../../../../../node_modules/react-router-dom/dist/index';
+import { Box, ButtonBase, Stack, Typography } from '@mui/material/index';
+import { useNavigate } from 'react-router-dom/dist/index';
 
 const HeaderContent = () => {
     const navigate = useNavigate();

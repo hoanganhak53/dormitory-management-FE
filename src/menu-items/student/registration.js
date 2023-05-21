@@ -1,9 +1,9 @@
 // assets
-import { LoginOutlined, ProfileOutlined } from '@ant-design/icons';
+import { TeamOutlined, ProfileOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
-    LoginOutlined,
+    TeamOutlined,
     ProfileOutlined
 };
 
@@ -15,28 +15,18 @@ const registration = {
     type: 'group',
     children: [
         {
-            id: 'register',
-            title: 'Đăng ký phòng',
-            type: 'item',
-            url: '/login',
-            icon: icons.LoginOutlined,
-            target: true
-        },
-        {
             id: 'register2',
             title: 'Đăng ký các kỳ',
             type: 'item',
-            url: '/register',
-            icon: icons.ProfileOutlined,
-            target: true
+            url: '/registration/semester',
+            icon: icons.ProfileOutlined
         },
         {
             id: 'register3',
             title: 'Phòng hiện tại',
             type: 'item',
-            url: '/register',
-            icon: icons.ProfileOutlined,
-            target: true
+            url: '/registration/current',
+            icon: icons.TeamOutlined
         }
     ]
 };

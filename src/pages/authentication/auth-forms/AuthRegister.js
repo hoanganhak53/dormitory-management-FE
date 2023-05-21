@@ -15,6 +15,8 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 const AuthRegister = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [showRepassword, setShowRepassword] = useState(false);
+
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -23,19 +25,32 @@ const AuthRegister = () => {
         event.preventDefault();
     };
 
+    const handleClickShowRepassword = () => {
+        setShowRepassword(!showRepassword);
+    };
+
+    const handleMouseDownRepassword = (event) => {
+        event.preventDefault();
+    };
+
     return (
         <>
             <Formik
                 initialValues={{
-                    firstname: '',
+                    full_name: '',
                     email: '',
                     password: '',
+                    repassword: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
-                    firstname: Yup.string().max(255).required('Họ và tên là bắt buộc'),
+                    full_name: Yup.string().max(255, 'Tên quá dài').required('Họ và tên là bắt buộc'),
                     email: Yup.string().email('Email không đúng định dạng').max(255).required('Email là trường bắt buộc'),
-                    password: Yup.string().max(255).required('Mật khẩu là trường bắt buộc')
+                    password: Yup.string()
+                        .max(20, 'Mật khẩu tối đa 20 ký tự')
+                        .required('Mật khẩu là trường bắt buộc')
+                        .min(6, 'Mật khẩu dài ít nhất 6 ký tự'),
+                    repassword: Yup.string().oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
@@ -54,42 +69,21 @@ const AuthRegister = () => {
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <Stack spacing={1}>
-                                    <InputLabel htmlFor="firstname-signup">Họ và tên*</InputLabel>
+                                    <InputLabel htmlFor="full_name-signup">Họ và tên*</InputLabel>
                                     <OutlinedInput
-                                        id="firstname-login"
-                                        type="firstname"
-                                        value={values.firstname}
-                                        name="firstname"
+                                        id="full_name-login"
+                                        type="full_name"
+                                        value={values.full_name}
+                                        name="full_name"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="John"
+                                        placeholder="Hoàng Anh"
                                         fullWidth
-                                        error={Boolean(touched.firstname && errors.firstname)}
+                                        error={Boolean(touched.full_name && errors.full_name)}
                                     />
-                                    {touched.firstname && errors.firstname && (
-                                        <FormHelperText error id="helper-text-firstname-signup">
-                                            {errors.firstname}
-                                        </FormHelperText>
-                                    )}
-                                </Stack>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Stack spacing={1}>
-                                    <InputLabel htmlFor="company-signup">Company</InputLabel>
-                                    <OutlinedInput
-                                        fullWidth
-                                        error={Boolean(touched.company && errors.company)}
-                                        id="company-signup"
-                                        value={values.company}
-                                        name="company"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        placeholder="Demo Inc."
-                                        inputProps={{}}
-                                    />
-                                    {touched.company && errors.company && (
-                                        <FormHelperText error id="helper-text-company-signup">
-                                            {errors.company}
+                                    {touched.full_name && errors.full_name && (
+                                        <FormHelperText error id="helper-text-full_name-signup">
+                                            {errors.full_name}
                                         </FormHelperText>
                                     )}
                                 </Stack>
@@ -106,7 +100,7 @@ const AuthRegister = () => {
                                         name="email"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="demo@company.com"
+                                        placeholder="anh.ndh22xxx@sis.hust.edu.vn"
                                         inputProps={{}}
                                     />
                                     {touched.email && errors.email && (
@@ -149,6 +143,43 @@ const AuthRegister = () => {
                                     {touched.password && errors.password && (
                                         <FormHelperText error id="helper-text-password-signup">
                                             {errors.password}
+                                        </FormHelperText>
+                                    )}
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Stack spacing={1}>
+                                    <InputLabel htmlFor="repassword-signup">Nhập lại mật khẩu</InputLabel>
+                                    <OutlinedInput
+                                        fullWidth
+                                        error={Boolean(touched.repassword && errors.repassword)}
+                                        id="repassword-signup"
+                                        type={showRepassword ? 'text' : 'password'}
+                                        value={values.repassword}
+                                        name="repassword"
+                                        onBlur={handleBlur}
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                        }}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle repassword visibility"
+                                                    onClick={handleClickShowRepassword}
+                                                    onMouseDown={handleMouseDownRepassword}
+                                                    edge="end"
+                                                    size="large"
+                                                >
+                                                    {showRepassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        placeholder="******"
+                                        inputProps={{}}
+                                    />
+                                    {touched.repassword && errors.repassword && (
+                                        <FormHelperText error id="helper-text-repassword-signup">
+                                            {errors.repassword}
                                         </FormHelperText>
                                     )}
                                 </Stack>

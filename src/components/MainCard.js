@@ -10,7 +10,7 @@ import Highlighter from './third-party/Highlighter';
 
 // header style
 const headerSX = {
-    p: 2.5,
+    p: '10px 20px',
     '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
 };
 
@@ -33,6 +33,7 @@ const MainCard = forwardRef(
             title,
             codeHighlight,
             bgColor,
+            borderColor,
             np,
             ...others
         },
@@ -50,7 +51,7 @@ const MainCard = forwardRef(
                     ...sx,
                     border: border ? '1px solid' : 'none',
                     borderRadius: 2,
-                    borderColor: theme.palette.mode === 'dark' ? theme.palette.divider : theme.palette.grey.A800,
+                    borderColor: borderColor ? borderColor : theme.palette.grey.A800,
                     backgroundColor: bgColor ? bgColor : '#fff',
                     boxShadow: boxShadow && (!border || theme.palette.mode === 'dark') ? shadow || theme.customShadows.z1 : 'inherit',
                     ':hover': {
@@ -95,6 +96,7 @@ const MainCard = forwardRef(
 
 MainCard.propTypes = {
     border: PropTypes.bool,
+    borderColor: PropTypes.string,
     boxShadow: PropTypes.bool,
     contentSX: PropTypes.object,
     darkTitle: PropTypes.bool,

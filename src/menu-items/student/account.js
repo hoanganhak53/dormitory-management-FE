@@ -1,21 +1,10 @@
 // assets
-import {
-    AppstoreAddOutlined,
-    AntDesignOutlined,
-    BarcodeOutlined,
-    BgColorsOutlined,
-    FontSizeOutlined,
-    LoadingOutlined
-} from '@ant-design/icons';
+import { UserOutlined, IdcardOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
-    FontSizeOutlined,
-    BgColorsOutlined,
-    BarcodeOutlined,
-    AntDesignOutlined,
-    LoadingOutlined,
-    AppstoreAddOutlined
+    UserOutlined,
+    IdcardOutlined
 };
 
 // ==============================|| MENU ITEMS - account ||============================== //
@@ -29,15 +18,15 @@ const account = {
             id: 'account-info',
             title: 'Sửa hồ sơ',
             type: 'item',
-            url: '/typography',
-            icon: icons.FontSizeOutlined
+            url: '/profile',
+            icon: icons.UserOutlined
         },
         {
             id: 'account-more',
             title: 'Thông tin bổ sung',
             type: 'item',
-            url: '/color',
-            icon: icons.BgColorsOutlined
+            url: '/more',
+            icon: icons.IdcardOutlined
         }
     ]
 };

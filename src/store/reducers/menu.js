@@ -6,7 +6,12 @@ const initialState = {
     openItem: ['dashboard'],
     openComponent: 'buttons',
     drawerOpen: false,
-    componentDrawerOpen: true
+    componentDrawerOpen: true,
+    snackBar: {
+        status: 'success',
+        message: 'This is the message',
+        open: false
+    }
 };
 
 // ==============================|| SLICE - MENU ||============================== //
@@ -29,10 +34,18 @@ const menu = createSlice({
 
         openComponentDrawer(state, action) {
             state.componentDrawerOpen = action.payload.componentDrawerOpen;
+        },
+
+        openSnackBar(state, action) {
+            state.snackBar = { open: true, message: action.payload.message, status: action.payload.status };
+        },
+
+        closeSnackBar(state) {
+            state.snackBar.open = false;
         }
     }
 });
 
 export default menu.reducer;
 
-export const { activeItem, activeComponent, openDrawer, openComponentDrawer } = menu.actions;
+export const { activeItem, activeComponent, openDrawer, openComponentDrawer, openSnackBar, closeSnackBar } = menu.actions;

@@ -11,9 +11,10 @@ import Drawer from './Drawer';
 import Header from './Header';
 import navigation from 'menu-items';
 import Breadcrumbs from 'components/@extended/Breadcrumbs';
+import { Alert, Snackbar } from '@mui/material/index';
 
 // types
-import { openDrawer } from 'store/reducers/menu';
+import { openDrawer, closeSnackBar } from 'store/reducers/menu';
 
 const MainLayout = () => {
     const theme = useTheme();
@@ -21,12 +22,20 @@ const MainLayout = () => {
     const dispatch = useDispatch();
 
     const { drawerOpen } = useSelector((state) => state.menu);
-
+    const menu = useSelector((state) => state.menu);
+    const { snackBar } = menu;
     // drawer toggler
     const [open, setOpen] = useState(drawerOpen);
     const handleDrawerToggle = () => {
         setOpen(!open);
         dispatch(openDrawer({ drawerOpen: !open }));
+    };
+
+    const handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        dispatch(closeSnackBar());
     };
 
     // set media wise responsive drawer
@@ -51,6 +60,11 @@ const MainLayout = () => {
                 <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
                 <Outlet />
             </Box>
+            <Snackbar open={snackBar.open} autoHideDuration={4000} onClose={handleSnackBarClose}>
+                <Alert onClose={handleSnackBarClose} severity={snackBar.status} sx={{ width: '100%' }}>
+                    {snackBar.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

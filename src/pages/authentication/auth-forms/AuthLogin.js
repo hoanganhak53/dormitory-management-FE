@@ -13,9 +13,12 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom/dist/index';
 
 const AuthLogin = () => {
     const [showPassword, setShowPassword] = React.useState(false);
+    const navigate = useNavigate();
+
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -28,13 +31,16 @@ const AuthLogin = () => {
         <>
             <Formik
                 initialValues={{
-                    email: 'info@codedthemes.com',
-                    password: '123456',
+                    email: '',
+                    password: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
                     email: Yup.string().email('Email không đúng định dạng').max(255).required('Email là trường bắt buộc'),
-                    password: Yup.string().max(255).required('Mật khẩu là trường bắt buộc')
+                    password: Yup.string()
+                        .max(20, 'Mật khẩu tối đa 20 ký tự')
+                        .required('Mật khẩu là trường bắt buộc')
+                        .min(6, 'Mật khẩu dài ít nhất 6 ký tự')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
@@ -45,6 +51,7 @@ const AuthLogin = () => {
                         setErrors({ submit: err.message });
                         setSubmitting(false);
                     }
+                    navigate('/dashboard');
                 }}
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -60,7 +67,7 @@ const AuthLogin = () => {
                                         name="email"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="Enter email address"
+                                        placeholder="Nhập email của bạn"
                                         fullWidth
                                         error={Boolean(touched.email && errors.email)}
                                     />
@@ -96,7 +103,7 @@ const AuthLogin = () => {
                                                 </IconButton>
                                             </InputAdornment>
                                         }
-                                        placeholder="Enter password"
+                                        placeholder="Nhập mật khẩu"
                                     />
                                     {touched.password && errors.password && (
                                         <FormHelperText error id="standard-weight-helper-text-password-login">

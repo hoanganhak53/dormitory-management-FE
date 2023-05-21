@@ -19,7 +19,7 @@ const dashboard = {
             id: 'dashboard',
             title: 'Bảng điều khiển',
             type: 'item',
-            url: '/dashboard/default',
+            url: '/dashboard',
             icon: icons.DashboardOutlined,
             breadcrumbs: false
         },
@@ -27,7 +27,7 @@ const dashboard = {
             id: 'portal',
             title: 'Trang chủ',
             type: 'item',
-            url: '/dashboard/default',
+            url: '/portal',
             icon: icons.HomeOutlined,
             breadcrumbs: false
         }
