@@ -41,9 +41,9 @@ const DashboardDefault = () => {
                     <Box sx={{ p: 3, pb: 0 }}>
                         <Stack spacing={2}>
                             <Typography variant="h6" color="textSecondary">
-                                This Week Statistics
+                                Tiền dịch vụ hàng tháng
                             </Typography>
-                            <Typography variant="h3">$7,650</Typography>
+                            <Typography variant="h3">72,650VND</Typography>
                         </Stack>
                     </Box>
                     <MonthlyBarChart />
@@ -60,9 +60,9 @@ const DashboardDefault = () => {
                     <Box sx={{ p: 3, pb: 0 }}>
                         <Stack spacing={2}>
                             <Typography variant="h6" color="textSecondary">
-                                This Week Statistics
+                                TIền phòng các kỳ
                             </Typography>
-                            <Typography variant="h3">$7,650</Typography>
+                            <Typography variant="h3">72,650VND</Typography>
                         </Stack>
                     </Box>
                     <MonthlyBarChart />

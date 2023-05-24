@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material/index';
 import { styled } from '@mui/material/styles';
 import { TablePagination } from '@mui/material/index';
+import { Typography } from '../../../node_modules/@mui/material/index';
 
 // Tạo styled component cho bảng
 const TableCustom = styled(Table)`
@@ -64,8 +65,8 @@ const TableComponent = ({ columns, data }) => {
                 <TableHeadCustom>
                     <TableRow>
                         {/* Render các ô tiêu đề từ mảng columns */}
-                        {columns.map((column) => (
-                            <TableCellHeadCustom key={column.field} width={column.width}>
+                        {columns.map((column, index) => (
+                            <TableCellHeadCustom key={column.field + index} width={column.width}>
                                 {column.headerName}
                             </TableCellHeadCustom>
                         ))}
@@ -78,8 +79,8 @@ const TableComponent = ({ columns, data }) => {
                     {(rowsPerPage > 0 ? data.slice(startItem, endItem) : data).map((row) => (
                         <TableRowCustom key={row.id}>
                             {/* Render các ô từ mảng columns */}
-                            {columns.map((column) => (
-                                <TableCellCustom key={column.field} width={column.width}>
+                            {columns.map((column, index) => (
+                                <TableCellCustom key={column.field + index} width={column.width}>
                                     {/* Kiểm tra nếu field là 'action', sử dụng hàm renderCell, ngược lại hiển thị giá trị từ data */}
                                     {column.field === 'action' ? column.renderCell(row) : row[column.field]}
                                 </TableCellCustom>
@@ -91,6 +92,11 @@ const TableComponent = ({ columns, data }) => {
                     {emptyRows > 0 && <></>}
                 </TableBody>
             </TableCustom>
+            {data.length == 0 && (
+                <Typography variant="h5" sx={{ textAlign: 'center' }} py={5}>
+                    Không có dữ liệu
+                </Typography>
+            )}
 
             {/* Phân trang */}
             <TablePagination
@@ -101,6 +107,7 @@ const TableComponent = ({ columns, data }) => {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage="Số hàng"
             />
         </TableContainer>
     );

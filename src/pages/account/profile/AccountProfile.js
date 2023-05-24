@@ -21,7 +21,13 @@ const AccountProfile = () => {
     return (
         <MainCard
             title="Quản lý hồ sơ"
-            secondary={true ? <Chip label="Chưa xác thực" color="error" /> : <Chip label="Đã xác thực" color="success" />}
+            secondary={
+                true ? (
+                    <Chip label="Chưa xác thực" color="error" sx={{ borderRadius: '15px', fontSize: '12px' }} />
+                ) : (
+                    <Chip label="Đã xác thực" color="success" sx={{ borderRadius: '15px', fontSize: '2px' }} />
+                )
+            }
         >
             <Formik
                 initialValues={{

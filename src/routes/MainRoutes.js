@@ -12,9 +12,13 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 const RegistrationCurrent = Loadable(lazy(() => import('pages/registration/current/RegistrationCurrent')));
 const RegistrationSemester = Loadable(lazy(() => import('pages/registration/semester/RegistrationSemester')));
 
-// render - registration page
+// render - account page
 const AccountProfile = Loadable(lazy(() => import('pages/account/profile/AccountProfile')));
 const AccountMore = Loadable(lazy(() => import('pages/account/more/AccountMore')));
+
+// render - fee page
+const FeeRoom = Loadable(lazy(() => import('pages/fee/room/FeeRoom')));
+const FeeService = Loadable(lazy(() => import('pages/fee/service/FeeService')));
 
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
@@ -51,6 +55,19 @@ const MainRoutes = {
                 {
                     path: 'current',
                     element: <RegistrationCurrent />
+                }
+            ]
+        },
+        {
+            path: 'fee',
+            children: [
+                {
+                    path: 'service',
+                    element: <FeeService />
+                },
+                {
+                    path: 'room',
+                    element: <FeeRoom />
                 }
             ]
         },

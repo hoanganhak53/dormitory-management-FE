@@ -115,7 +115,7 @@ const Notification = () => {
                         >
                             <ClickAwayListener onClickAway={handleClose}>
                                 <MainCard
-                                    title="Notification"
+                                    title="Thông báo"
                                     elevation={0}
                                     border={false}
                                     content={false}
@@ -150,11 +150,11 @@ const Notification = () => {
                                             <ListItemText
                                                 primary={
                                                     <Typography variant="h6">
-                                                        It&apos;s{' '}
+                                                        Bạn
                                                         <Typography component="span" variant="subtitle1">
-                                                            Cristina danny&apos;s
-                                                        </Typography>{' '}
-                                                        birthday today.
+                                                            Hoàng Anh{' '}
+                                                        </Typography>
+                                                        Đã đăng ký phòng thành công
                                                     </Typography>
                                                 }
                                                 secondary="2 min ago"
@@ -181,9 +181,9 @@ const Notification = () => {
                                                 primary={
                                                     <Typography variant="h6">
                                                         <Typography component="span" variant="subtitle1">
-                                                            Aida Burg
+                                                            Tòa nhà B3
                                                         </Typography>{' '}
-                                                        commented your post.
+                                                        thông báo tiền điện tháng 2
                                                     </Typography>
                                                 }
                                                 secondary="5 August"
@@ -207,14 +207,7 @@ const Notification = () => {
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText
-                                                primary={
-                                                    <Typography variant="h6">
-                                                        Your Profile is Complete &nbsp;
-                                                        <Typography component="span" variant="subtitle1">
-                                                            60%
-                                                        </Typography>{' '}
-                                                    </Typography>
-                                                }
+                                                primary={<Typography variant="h6">Đăng ký thất bại</Typography>}
                                                 secondary="7 hours ago"
                                             />
                                             <ListItemSecondaryAction>
@@ -239,15 +232,15 @@ const Notification = () => {
                                                 primary={
                                                     <Typography variant="h6">
                                                         <Typography component="span" variant="subtitle1">
-                                                            Cristina Danny
+                                                            Tòa B3 thông báo
                                                         </Typography>{' '}
-                                                        invited to join{' '}
+                                                        hạn nộp tiền phòng chỉ còn{' '}
                                                         <Typography component="span" variant="subtitle1">
-                                                            Meeting.
+                                                            2 ngày
                                                         </Typography>
                                                     </Typography>
                                                 }
-                                                secondary="Daily scrum meeting time"
+                                                secondary="Nộp đúng hạn bạn nhé"
                                             />
                                             <ListItemSecondaryAction>
                                                 <Typography variant="caption" noWrap>
@@ -260,7 +253,7 @@ const Notification = () => {
                                             <ListItemText
                                                 primary={
                                                     <Typography variant="h6" color="primary">
-                                                        View All
+                                                        Xem thêm
                                                     </Typography>
                                                 }
                                             />

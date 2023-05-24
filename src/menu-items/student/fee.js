@@ -7,8 +7,6 @@ const icons = {
     ExceptionOutlined
 };
 
-// ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
-
 const fee = {
     id: 'fee',
     title: 'Hóa đơn',
@@ -18,14 +16,14 @@ const fee = {
             id: 'service-fee',
             title: 'Dịch vụ',
             type: 'item',
-            url: '/sample-page',
+            url: '/fee/service',
             icon: icons.DollarOutlined
         },
         {
             id: 'room-fee',
             title: 'Tiền phòng',
             type: 'item',
-            url: '/sample-page',
+            url: '/fee/room',
             icon: icons.ExceptionOutlined
         }
     ]
