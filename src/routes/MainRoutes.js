@@ -20,6 +20,8 @@ const AccountMore = Loadable(lazy(() => import('pages/account/more/AccountMore')
 const FeeRoom = Loadable(lazy(() => import('pages/fee/room/FeeRoom')));
 const FeeService = Loadable(lazy(() => import('pages/fee/service/FeeService')));
 
+const AdminForm = Loadable(lazy(() => import('pages/form/AdminForm')));
+
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
 const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
@@ -78,6 +80,10 @@ const MainRoutes = {
         {
             path: 'more',
             element: <AccountMore />
+        },
+        {
+            path: 'form',
+            element: <AdminForm />
         },
         {
             path: 'typography',

@@ -65,7 +65,7 @@ const AccountProfile = () => {
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                     <form noValidate onSubmit={handleSubmit}>
-                        <Grid container spacing={3} alignItems="center" px={30} pt={2}>
+                        <Grid container spacing={3} px={30} pt={2}>
                             <Grid item xs={12}>
                                 <Stack spacing={1} direction="row" alignItems="center">
                                     <InputLabel htmlFor="email-login" sx={{ width: '150px' }}>
