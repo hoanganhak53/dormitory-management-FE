@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid } from '@mui/material/index';
-import { Checkbox, MenuItem, Radio, TextField } from '@mui/material/index';
-import { Button, IconButton } from '../../../node_modules/@mui/material/index';
+import { Checkbox, MenuItem, Radio, TextField, Button, IconButton, Slider, Typography } from '@mui/material/index';
 import { CloseOutlined } from '@ant-design/icons';
-import CustomDialog from 'components/CustomDialog';
+import { useDispatch } from 'react-redux';
+import { openSnackBar } from 'store/reducers/menu';
+import MatrixSelect, { valueMatrix } from './MatrixSelect';
 
 export const debounce = (func, delay) => {
     let timeoutId;
@@ -15,13 +16,42 @@ export const debounce = (func, delay) => {
     };
 };
 
-const CreateQA = () => {
-    const [question, setQuestion] = useState('');
-    const [type, setType] = useState(0);
-    const [answers, setAnwsers] = useState([]);
-    const [openDialog, setOpenDialog] = useState(false);
+const generateMatrix = (n) => {
+    var result = {};
+
+    for (var i = 0; i < n; i++) {
+        result[i] = Array(n).fill(0);
+    }
+    return result;
+};
+
+const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
+    const [question, setQuestion] = useState(QA.question || '');
+    const [type, setType] = useState(QA.type || 0);
+    const [weight, setWeight] = useState(QA.weight || 0.1);
+    const [answers, setAnwsers] = useState(QA.answers || []);
+    const [matrix, setMatrix] = useState(QA.matrix || {});
+
+    const [step, setStep] = useState(0);
+    const dispatch = useDispatch();
+
+    const setElement = (i, j, value) => {
+        const clone = { ...matrix };
+        clone[i][j] = value;
+        clone[j][i] = value;
+        setMatrix(clone);
+    };
 
     const addAnwsers = (event) => {
+        if (answers.length >= 8) {
+            dispatch(
+                openSnackBar({
+                    message: 'Một câu hỏi có tối đa 8 câu trả lời',
+                    status: 'error'
+                })
+            );
+            return;
+        }
         if (event.key == 'Enter') {
             setAnwsers((prev) => [...prev, event.target.value]);
             event.target.value = `Tùy chọn ${answers.length + 2}`;
@@ -46,6 +76,92 @@ const CreateQA = () => {
         });
         setAnwsers(rs);
     };
+
+    const nextStep = () => {
+        if (question.length == 0) {
+            dispatch(
+                openSnackBar({
+                    message: 'Bạn chưa nhập câu hỏi',
+                    status: 'error'
+                })
+            );
+            return;
+        }
+        if (answers.length < 2) {
+            dispatch(
+                openSnackBar({
+                    message: 'Một câu hỏi phải có hơn 2 câu trả lời',
+                    status: 'error'
+                })
+            );
+            return;
+        }
+
+        if (Object.keys(matrix).length !== answers.length) {
+            setMatrix(generateMatrix(answers.length));
+        }
+        setStep(1);
+    };
+
+    if (step) {
+        return (
+            <Grid container px={1.5} py={2}>
+                <Grid container mb={2} direction="row" justifyContent="space-between">
+                    <Grid item xs={7.5}>
+                        <Typography variant="h5">Trọng số câu hỏi</Typography>
+                    </Grid>
+                </Grid>
+                <Grid container mb={1} direction="row" justifyContent="space-between" px={5}>
+                    <Slider
+                        aria-label="Weight"
+                        getAriaValueText={valueMatrix}
+                        valueLabelDisplay="auto"
+                        value={weight}
+                        onChange={(e) => {
+                            setWeight(e.target.value);
+                        }}
+                        step={0.1}
+                        min={0}
+                        max={1}
+                    />
+                </Grid>
+                <Grid container mb={3} direction="row" justifyContent="space-between">
+                    <Grid item xs={7.5}></Grid>
+                </Grid>
+                <Grid container mb={3} direction="row" justifyContent="space-between">
+                    <Grid item xs={7.5}>
+                        <Typography variant="h5">Trọng số câu trả lời</Typography>
+                    </Grid>
+                </Grid>
+                <MatrixSelect matrix={matrix} setElement={setElement} />
+                <Grid container justifyContent="space-between" mt={3}>
+                    <Button onClick={() => setStep(0)}>Quay lại</Button>
+                    <Button
+                        onClick={() => {
+                            console.log({
+                                weight,
+                                type,
+                                answers,
+                                question,
+                                matrix
+                            });
+                            addItemForm({
+                                weight,
+                                type,
+                                answers,
+                                question,
+                                matrix
+                            });
+                            setOpenDialog(false);
+                        }}
+                        variant="contained"
+                    >
+                        Tạo câu hỏi
+                    </Button>
+                </Grid>
+            </Grid>
+        );
+    }
 
     return (
         <Grid container px={1.5} py={2.5}>
@@ -120,8 +236,9 @@ const CreateQA = () => {
                     />
                 </Grid>
             </Grid>
-            <Button onClick={() => setOpenDialog(true)}>Đặt trọng số</Button>
-            <CustomDialog title="Tạo câu hỏi" width="sm" bodyComponent={<>aa</>} open={openDialog} onClose={() => setOpenDialog(false)} />
+            <Grid container justifyContent="end" mt={3}>
+                <Button onClick={nextStep}>Đặt trọng số</Button>
+            </Grid>
         </Grid>
     );
 };
