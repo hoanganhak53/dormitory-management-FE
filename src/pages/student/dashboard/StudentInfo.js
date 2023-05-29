@@ -1,9 +1,9 @@
 import React from 'react';
 import MainCard from 'components/MainCard';
-import { Grid, Stack, Typography } from '../../../node_modules/@mui/material/index';
+import { Grid, Stack, Typography } from '@mui/material/index';
 import { styled } from '@mui/material/styles';
 
-const StudentAvatar = styled('img')(() => ({
+export const StudentAvatar = styled('img')(() => ({
     borderRadius: '5px',
     padding: '4px',
     backgroundColor: '#fff',

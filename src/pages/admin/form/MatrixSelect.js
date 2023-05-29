@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Slider } from '@mui/material/index';
 import { styled } from '@mui/system';
-import { Tooltip } from '../../../node_modules/@mui/material/index';
+import { Tooltip } from '@mui/material/index';
 
 const Square = styled(Grid)`
     border: 1px solid #f0f0f0;

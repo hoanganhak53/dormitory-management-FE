@@ -2,7 +2,7 @@ import { Grid, Typography } from '@mui/material/index';
 import TableComponent from 'components/table/TableComponent';
 import moment from 'moment/moment';
 import { formatCurrency } from 'utils/fomat';
-import { Chip } from '../../../../node_modules/@mui/material/index';
+import { Chip } from '@mui/material/index';
 
 const FeeRoom = () => {
     const generateData = (count) => {

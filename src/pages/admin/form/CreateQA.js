@@ -26,11 +26,11 @@ const generateMatrix = (n) => {
 };
 
 const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
-    const [question, setQuestion] = useState(QA.question || '');
-    const [type, setType] = useState(QA.type || 0);
-    const [weight, setWeight] = useState(QA.weight || 0.1);
-    const [answers, setAnwsers] = useState(QA.answers || []);
-    const [matrix, setMatrix] = useState(QA.matrix || {});
+    const [question, setQuestion] = useState(QA?.question || '');
+    const [type, setType] = useState(QA?.type || 0);
+    const [weight, setWeight] = useState(QA?.weight || 0.1);
+    const [answers, setAnwsers] = useState(QA?.answers || []);
+    const [matrix, setMatrix] = useState(QA?.matrix || {});
 
     const [step, setStep] = useState(0);
     const dispatch = useDispatch();

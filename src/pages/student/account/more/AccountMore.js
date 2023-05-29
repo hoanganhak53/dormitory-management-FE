@@ -2,19 +2,7 @@ import MainCard from 'components/MainCard';
 import React from 'react';
 
 // material-ui
-import {
-    Button,
-    FormHelperText,
-    Grid,
-    InputLabel,
-    Stack,
-    Chip,
-    FormControlLabel,
-    Radio,
-    FormControl,
-    FormLabel,
-    RadioGroup
-} from '@mui/material';
+import { Button, FormHelperText, Grid, FormControlLabel, Radio, FormControl, FormLabel, RadioGroup } from '@mui/material';
 
 import { InfoCircleOutlined } from '@ant-design/icons';
 
@@ -24,7 +12,7 @@ import { Formik } from 'formik';
 
 // project import
 import AnimateButton from 'components/@extended/AnimateButton';
-import { Checkbox, FormGroup, TextField, Typography } from '../../../../node_modules/@mui/material/index';
+import { Checkbox, FormGroup, TextField, Typography } from '@mui/material/index';
 import { characters, desires, favorites, sleep_times, time_in_ktxs } from 'constanst/more';
 
 export const AccountMore = () => {
