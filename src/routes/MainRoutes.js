@@ -22,6 +22,9 @@ const FeeService = Loadable(lazy(() => import('pages/student/fee/service/FeeServ
 
 const AdminForm = Loadable(lazy(() => import('pages/admin/form/AdminForm')));
 const Student = Loadable(lazy(() => import('pages/admin/student/Student')));
+const AdminPost = Loadable(lazy(() => import('pages/admin/post/AdminPost')));
+const Apartment = Loadable(lazy(() => import('pages/admin/apartment/Apartment')));
+const ARegistration = Loadable(lazy(() => import('pages/admin/a_registration/ARegistration')));
 
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
@@ -83,8 +86,20 @@ const MainRoutes = {
             element: <Student />
         },
         {
+            path: 'post',
+            element: <AdminPost />
+        },
+        {
             path: 'more',
             element: <AccountMore />
+        },
+        {
+            path: 'apartment',
+            element: <Apartment />
+        },
+        {
+            path: 'a_registration',
+            element: <ARegistration />
         },
         {
             path: 'form',

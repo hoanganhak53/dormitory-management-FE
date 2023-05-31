@@ -11,6 +11,7 @@ const Header = styled('div')`
     padding: 6px 18px;
     background: ${(props) => props.theme.palette.primary.main};
     color: white;
+    min-height: 48px;
 `;
 
 const Title = styled(Typography)`

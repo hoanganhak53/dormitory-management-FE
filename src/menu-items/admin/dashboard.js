@@ -47,7 +47,7 @@ const admin = {
             id: 'building',
             title: 'Tòa nhà',
             type: 'item',
-            url: '/building',
+            url: '/apartment',
             icon: icons.ApartmentOutlined,
             breadcrumbs: false
         },
