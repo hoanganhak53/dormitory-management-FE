@@ -3,7 +3,7 @@ import { Chip } from '@mui/material/index';
 import { Button, MenuItem, Stack, TextField, Grid } from '@mui/material/index';
 import CustomDialog from 'components/CustomDialog';
 import React from 'react';
-import { Menu, Typography } from '../../../../node_modules/@mui/material/index';
+import { Menu, Typography } from '@mui/material/index';
 import { formatCurrency } from 'utils/fomat';
 import EditRoom from './EditRoom';
 import RoomType from './RoomType';

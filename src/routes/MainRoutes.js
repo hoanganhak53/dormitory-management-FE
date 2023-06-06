@@ -20,6 +20,9 @@ const AccountMore = Loadable(lazy(() => import('pages/student/account/more/Accou
 const FeeRoom = Loadable(lazy(() => import('pages/student/fee/room/FeeRoom')));
 const FeeService = Loadable(lazy(() => import('pages/student/fee/service/FeeService')));
 
+const RoomList = Loadable(lazy(() => import('pages/manager/room/RoomList')));
+const ManagerStudent = Loadable(lazy(() => import('pages/manager/student/ManagerStudent')));
+
 const AdminForm = Loadable(lazy(() => import('pages/admin/form/AdminForm')));
 const Student = Loadable(lazy(() => import('pages/admin/student/Student')));
 const AdminPost = Loadable(lazy(() => import('pages/admin/post/AdminPost')));
@@ -108,6 +111,14 @@ const MainRoutes = {
         {
             path: 'typography',
             element: <Typography />
+        },
+        {
+            path: 'student-manager',
+            element: <ManagerStudent />
+        },
+        {
+            path: 'room-manager',
+            element: <RoomList />
         }
     ]
 };

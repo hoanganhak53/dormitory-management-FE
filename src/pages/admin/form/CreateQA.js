@@ -156,7 +156,7 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
                         }}
                         variant="contained"
                     >
-                        Tạo câu hỏi
+                        {QA ? <>Sửa câu hỏi</> : <>Tạo câu hỏi</>}
                     </Button>
                 </Grid>
             </Grid>

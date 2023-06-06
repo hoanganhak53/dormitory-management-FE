@@ -16,6 +16,7 @@ export const AdminForm = () => {
     const [QA, setQA] = useState(null);
     const [form, setForm] = useState([
         {
+            id: 1,
             weight: 0.3,
             type: 0,
             answers: ['Tùy chọn 1', 'Tùy chọn 2'],
@@ -28,7 +29,19 @@ export const AdminForm = () => {
     ]);
 
     const addItemForm = (item) => {
-        setForm([...form, item]);
+        if (form.find((e) => e.id == item?.id)) {
+            setForm((prev) => {
+                const rs = prev.map((e) => {
+                    if (e.id == item?.id) {
+                        return item;
+                    }
+                    return e;
+                });
+                return rs;
+            });
+        } else {
+            setForm([...form, item]);
+        }
     };
 
     return (
