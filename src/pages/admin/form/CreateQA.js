@@ -20,7 +20,7 @@ const generateMatrix = (n) => {
     var result = {};
 
     for (var i = 0; i < n; i++) {
-        result[i] = Array(n).fill(0);
+        result[i] = Array(n).fill(1);
     }
     return result;
 };
@@ -38,7 +38,8 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
     const setElement = (i, j, value) => {
         const clone = { ...matrix };
         clone[i][j] = value;
-        clone[j][i] = value;
+        const inverse = 1 / value;
+        clone[j][i] = parseFloat(inverse.toFixed(2));
         setMatrix(clone);
     };
 
@@ -145,14 +146,6 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
                                 question,
                                 matrix
                             });
-                            addItemForm({
-                                weight,
-                                type,
-                                answers,
-                                question,
-                                matrix
-                            });
-                            setOpenDialog(false);
                         }}
                         variant="contained"
                     >

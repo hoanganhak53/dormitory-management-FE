@@ -25,7 +25,7 @@ const dashboard = {
         },
         {
             id: 'dashboard',
-            title: 'Bảng điều khiển',
+            title: 'Hồ sơ',
             type: 'item',
             url: '/dashboard',
             icon: icons.DashboardOutlined,

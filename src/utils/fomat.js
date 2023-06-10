@@ -1,3 +1,5 @@
+import { genders, majors } from 'constanst/index';
+
 export const formatCurrency = (number) => {
     const roundedNumber = Number(number).toFixed(0).toString();
 
@@ -9,4 +11,12 @@ export const formatCurrency = (number) => {
     const formattedNumber = `${formattedInteger}VND`;
 
     return formattedNumber;
+};
+
+export const formatGender = (number) => {
+    return genders[number - 1]?.label || 'NA';
+};
+
+export const formatMajor = (number) => {
+    return majors[number - 1]?.label || 'NA';
 };

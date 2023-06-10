@@ -27,11 +27,11 @@ export const batchs = [
 
 export const genders = [
     {
-        value: 'male',
+        value: 1,
         label: 'Male'
     },
     {
-        value: 'famale',
+        value: 2,
         label: 'Famale'
     }
 ];

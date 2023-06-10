@@ -22,17 +22,14 @@ export const valueMatrix = (value) => {
 
 const MatrixSelect = ({ matrix, setElement }) => {
     const [selected, setSelected] = useState([]);
-    const [sliderValue, setSliderValue] = useState(0.4);
+    const [sliderValue, setSliderValue] = useState(1);
 
     const initSliderValue = (i, j) => {
-        if (i && j) {
-            return matrix[i][j];
-        }
-        return 0.4;
+        return matrix[i][j];
     };
 
     const clickSquare = (e, index) => {
-        if (e < index) {
+        if (e != index) {
             setSelected([e, index]);
             setSliderValue(initSliderValue(e, index));
         }
@@ -43,8 +40,6 @@ const MatrixSelect = ({ matrix, setElement }) => {
             return '#91d5ff';
         }
         if (i == j) {
-            return '#8c8c8c';
-        } else if (i > j) {
             return '#bfbfbf';
         } else {
             return '#ffffff';
@@ -60,12 +55,12 @@ const MatrixSelect = ({ matrix, setElement }) => {
                             return (
                                 <Tooltip key={`${e}${index}`} title={`Câu ${e * 1 + 1} và ${index + 1}`} placement="top">
                                     <Square
-                                        pointer={e < index ? 1 : 0}
+                                        pointer={e != index ? 1 : 0}
                                         item
                                         color={renderColor(e, index)}
                                         onClick={() => clickSquare(e, index)}
                                     >
-                                        {e != index && <>{square}</>}
+                                        {square}
                                     </Square>
                                 </Tooltip>
                             );
@@ -85,9 +80,9 @@ const MatrixSelect = ({ matrix, setElement }) => {
                         setElement(selected[0], selected[1], e.target.value);
                     }}
                     step={0.1}
-                    min={0}
+                    min={0.1}
                     max={1}
-                    disabled={selected[0] && selected[1] ? false : true}
+                    disabled={selected[0] != selected[1] ? false : true}
                 />
             </Grid>
         </Grid>

@@ -2,6 +2,10 @@ import React from 'react';
 import MainCard from 'components/MainCard';
 import { Grid, Stack, Typography } from '@mui/material/index';
 import { styled } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
+import { axiosInstance } from 'utils/auth-header';
+import avatar from 'assets/images/default_avatar.jpg';
+import { formatGender, formatMajor } from 'utils/fomat';
 
 export const StudentAvatar = styled('img')(() => ({
     borderRadius: '5px',
@@ -11,50 +15,64 @@ export const StudentAvatar = styled('img')(() => ({
 }));
 
 const StudentInfo = () => {
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        const me = async () => {
+            try {
+                await axiosInstance.get('profile/me').then((res) => {
+                    console.log(res.data);
+                    setUser(res.data.data);
+                });
+            } catch (err) {}
+        };
+
+        return me;
+    }, []);
+
     return (
         <MainCard>
             <Grid container rowSpacing={4.5} columnSpacing={2.75}>
                 <Grid item xs={12} md={6} lg={3} alignItems="center" justifyContent="center">
                     <Stack direction="column" alignItems="center" spacing={0}>
-                        <StudentAvatar
-                            width={200}
-                            height={280}
-                            src="https://kenh14cdn.com/2018/10/19/mona-lisa-15399382451312132235581.jpg"
-                            alt="avatar"
-                        />
-                        <Typography sx={{ fontWeight: '600', fontSize: '13px', mt: 1 }}>20193980</Typography>
+                        <StudentAvatar width={200} height={280} src={user.avatar ? user.avatar : avatar} alt="avatar" />
+                        <Typography sx={{ fontWeight: '600', fontSize: '13px', mt: 1 }}>{user.mssv}</Typography>
                     </Stack>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} alignItems="center" justifyContent="center">
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Họ và tên:</Typography>
-                        <Typography>Nguyễn Duy Hoàng Anh</Typography>
+                        <Typography>{user.full_name}</Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Chương trình:</Typography>
-                        <Typography>Khoa học Máy tính 2019</Typography>
+                        <Typography>{formatMajor(user.major)}</Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Giới tính:</Typography>
-                        <Typography>Nam</Typography>
+                        <Typography>{formatGender(user.gender)}</Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Khóa học:</Typography>
-                        <Typography>64</Typography>
+                        <Typography>K{user.batch || 'NA'}</Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Email:</Typography>
-                        <Typography>anh.ngh@gmail.com</Typography>
+                        <Typography>{user.email || 'NA'}</Typography>
                     </Stack>
                 </Grid>
                 <Grid item xs={12} md={6} lg={4} alignItems="center" justifyContent="center">
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Trạng thái:</Typography>
-                        <Typography color="success.main">Đã xác thực</Typography>
+                        <Typography color={user.is_more_info ? 'success.main' : 'error.main'}>
+                            {user.is_valid ? 'Đã xác thực' : 'Chưa xác thực'}
+                        </Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Thông tin bổ sung:</Typography>
-                        <Typography color="success.main">Đã hoàn tất</Typography>
+                        <Typography color={user.is_more_info ? 'success.main' : 'error.main'}>
+                            {user.is_more_info ? 'Đã hoàn tất' : 'Chưa hoàn tất'}
+                        </Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Phòng:</Typography>

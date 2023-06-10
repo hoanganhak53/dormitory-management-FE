@@ -1,67 +1,54 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-
-// material-ui
+import React, { useState } from 'react';
 import { Button, FormHelperText, Grid, Link, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material';
+import AnimateButton from 'components/@extended/AnimateButton';
 
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-
-// project import
-import AnimateButton from 'components/@extended/AnimateButton';
-
-// assets
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom/dist/index';
+import { useDispatch } from 'react-redux';
+import { openSnackBar } from 'store/reducers/menu';
 import { axiosInstance } from 'utils/auth-header';
 
-const AuthLogin = () => {
-    const [showPassword, setShowPassword] = React.useState(false);
-    const navigate = useNavigate();
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
+const ChangePassword = ({ close }) => {
+    const dispatch = useDispatch();
 
     return (
-        <>
+        <Grid container>
             <Formik
                 initialValues={{
-                    email: '',
+                    old_password: '',
                     password: '',
-                    submit: null
+                    repassword: ''
                 }}
                 validationSchema={Yup.object().shape({
-                    email: Yup.string().email('Email không đúng định dạng').max(255).required('Email là trường bắt buộc'),
+                    old_password: Yup.string()
+                        .max(20, 'Mật khẩu tối đa 20 ký tự')
+                        .required('Mật khẩu là trường bắt buộc')
+                        .min(6, 'Mật khẩu dài ít nhất 6 ký tự'),
                     password: Yup.string()
                         .max(20, 'Mật khẩu tối đa 20 ký tự')
                         .required('Mật khẩu là trường bắt buộc')
-                        .min(6, 'Mật khẩu dài ít nhất 6 ký tự')
+                        .min(6, 'Mật khẩu dài ít nhất 6 ký tự'),
+                    repassword: Yup.string('').oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
                         setStatus({ success: false });
                         setSubmitting(false);
 
-                        await axiosInstance
-                            .post('auth/login', {
-                                email: values.email,
-                                password: values.password
-                            })
-                            .then((res) => {
-                                localStorage.setItem('user', JSON.stringify(res.data.data));
-                                localStorage.setItem('token', JSON.stringify(res.data.token));
-                                localStorage.setItem('role', JSON.stringify(res.data.data.user_type));
-                                navigate('/');
-                                window.location.reload();
-                            });
+                        const new_values = values;
+                        delete new_values.repassword;
+                        await axiosInstance.put('profile/change/password', new_values).then((res) => {
+                            close();
+                            dispatch(
+                                openSnackBar({
+                                    message: res.data?.message,
+                                    status: 'success'
+                                })
+                            );
+                        });
                     } catch (err) {
-                        console.error(err);
+                        console.log(err);
                         setStatus({ success: false });
                         setErrors({ submit: err?.response?.data?.detail });
                         setSubmitting(false);
@@ -73,21 +60,21 @@ const AuthLogin = () => {
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <Stack spacing={1}>
-                                    <InputLabel htmlFor="email-login">Email</InputLabel>
+                                    <InputLabel htmlFor="password-login">Mật khẩu cũ</InputLabel>
                                     <OutlinedInput
-                                        id="email-login"
-                                        type="email"
-                                        value={values.email}
-                                        name="email"
+                                        fullWidth
+                                        error={Boolean(touched.old_password && errors.old_password)}
+                                        id="-old_password-login"
+                                        type="password"
+                                        value={values.old_password}
+                                        name="old_password"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="Nhập email của bạn"
-                                        fullWidth
-                                        error={Boolean(touched.email && errors.email)}
+                                        placeholder="Nhập mật khẩu"
                                     />
-                                    {touched.email && errors.email && (
-                                        <FormHelperText error id="standard-weight-helper-text-email-login">
-                                            {errors.email}
+                                    {touched.old_password && errors.old_password && (
+                                        <FormHelperText error id="standard-weight-helper-text-old_password-login">
+                                            {errors.old_password}
                                         </FormHelperText>
                                     )}
                                 </Stack>
@@ -99,24 +86,11 @@ const AuthLogin = () => {
                                         fullWidth
                                         error={Boolean(touched.password && errors.password)}
                                         id="-password-login"
-                                        type={showPassword ? 'text' : 'password'}
+                                        type="password"
                                         value={values.password}
                                         name="password"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                    size="large"
-                                                >
-                                                    {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
                                         placeholder="Nhập mật khẩu"
                                     />
                                     {touched.password && errors.password && (
@@ -126,29 +100,43 @@ const AuthLogin = () => {
                                     )}
                                 </Stack>
                             </Grid>
-
-                            <Grid item xs={12} sx={{ mt: -1 }}>
-                                <Link variant="h6" component={RouterLink} to="" color="text.primary">
-                                    Quên mật khẩu?
-                                </Link>
+                            <Grid item xs={12}>
+                                <Stack spacing={1}>
+                                    <InputLabel htmlFor="password-login">Mật khẩu</InputLabel>
+                                    <OutlinedInput
+                                        fullWidth
+                                        error={Boolean(touched.repassword && errors.repassword)}
+                                        id="-repassword-login"
+                                        type="password"
+                                        value={values.repassword}
+                                        name="repassword"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        placeholder="Nhập mật khẩu"
+                                    />
+                                    {touched.repassword && errors.repassword && (
+                                        <FormHelperText error id="standard-weight-helper-text-repassword-login">
+                                            {errors.repassword}
+                                        </FormHelperText>
+                                    )}
+                                </Stack>
                             </Grid>
                             {errors.submit && (
                                 <Grid item xs={12}>
                                     <FormHelperText error>{errors.submit}</FormHelperText>
                                 </Grid>
                             )}
-                            <Grid item xs={12}>
+                            <Grid container item xs={12} justifyContent="end">
                                 <AnimateButton>
                                     <Button
                                         disableElevation
                                         disabled={isSubmitting}
-                                        fullWidth
-                                        size="large"
+                                        size="small"
                                         type="submit"
                                         variant="contained"
                                         color="primary"
                                     >
-                                        Đăng nhập
+                                        Đổi mật khẩu
                                     </Button>
                                 </AnimateButton>
                             </Grid>
@@ -156,8 +144,8 @@ const AuthLogin = () => {
                     </form>
                 )}
             </Formik>
-        </>
+        </Grid>
     );
 };
 
-export default AuthLogin;
+export default ChangePassword;

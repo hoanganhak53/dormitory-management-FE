@@ -22,8 +22,8 @@ export const AdminForm = () => {
             answers: ['Tùy chọn 1', 'Tùy chọn 2'],
             question: 'abc',
             matrix: {
-                0: [0, 0.6],
-                1: [0.6, 0]
+                0: [1, 1],
+                1: [1, 1]
             }
         }
     ]);

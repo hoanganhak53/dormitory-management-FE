@@ -1,61 +1,30 @@
-import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import {
-    Avatar,
-    Box,
-    ButtonBase,
-    CardContent,
-    ClickAwayListener,
-    Grid,
-    IconButton,
-    Paper,
-    Popper,
-    Stack,
-    Tab,
-    Tabs,
-    Typography
-} from '@mui/material';
+import { Avatar, Box, ButtonBase, CardContent, ClickAwayListener, Grid, IconButton, Paper, Popper, Stack, Typography } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
 import ProfileTab from './ProfileTab';
-import SettingTab from './SettingTab';
+import avatar2 from 'assets/images/default_avatar.jpg';
 
 // assets
-import avatar1 from 'assets/images/users/avatar-1.png';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined } from '@ant-design/icons';
+import { useNavigate } from '../../../../../../node_modules/react-router-dom/dist/index';
 
-// tab panel wrapper
-function TabPanel({ children, value, index, ...other }) {
-    return (
-        <div role="tabpanel" hidden={value !== index} id={`profile-tabpanel-${index}`} aria-labelledby={`profile-tab-${index}`} {...other}>
-            {value === index && children}
-        </div>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired
-};
-
-function a11yProps(index) {
-    return {
-        id: `profile-tab-${index}`,
-        'aria-controls': `profile-tabpanel-${index}`
-    };
-}
-
-const Profile = () => {
+const Profile = ({ openDialog }) => {
     const theme = useTheme();
+    const user = JSON.parse(localStorage.getItem('user'));
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
-        // logout
+        localStorage.removeItem('user');
+        localStorage.removeItem('role');
+        localStorage.removeItem('token');
+        navigate('/portal');
+        window.location.reload();
     };
 
     const anchorRef = useRef(null);
@@ -69,12 +38,6 @@ const Profile = () => {
             return;
         }
         setOpen(false);
-    };
-
-    const [value, setValue] = useState(0);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
     };
 
     const iconBackColorOpen = 'grey.300';
@@ -111,12 +74,8 @@ const Profile = () => {
                 onClick={handleToggle}
             >
                 <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
-                    <Avatar
-                        alt="profile user"
-                        src="https://kenh14cdn.com/2018/10/19/mona-lisa-15399382451312132235581.jpg"
-                        sx={{ width: 32, height: 32 }}
-                    />
-                    <Typography variant="subtitle1">Hoàng Anh</Typography>
+                    <Avatar alt="profile user" src={user.avatar ? user.avatar : avatar2} sx={{ width: 32, height: 32 }} />
+                    <Typography variant="subtitle1">{user.full_name.split(' ').pop()}</Typography>
                 </Stack>
             </ButtonBase>
             <Popper
@@ -159,11 +118,11 @@ const Profile = () => {
                                                     <Stack direction="row" spacing={1.25} alignItems="center">
                                                         <Avatar
                                                             alt="profile user"
-                                                            src="https://kenh14cdn.com/2018/10/19/mona-lisa-15399382451312132235581.jpg"
+                                                            src={user.avatar ? user.avatar : avatar2}
                                                             sx={{ width: 32, height: 32 }}
                                                         />
                                                         <Stack>
-                                                            <Typography variant="h6">Hoàng Anh</Typography>
+                                                            <Typography variant="h6">{user.full_name}</Typography>
                                                             <Typography variant="body2" color="textSecondary">
                                                                 {role_name}
                                                             </Typography>
@@ -177,49 +136,7 @@ const Profile = () => {
                                                 </Grid>
                                             </Grid>
                                         </CardContent>
-                                        {open && (
-                                            <>
-                                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                                    <Tabs
-                                                        variant="fullWidth"
-                                                        value={value}
-                                                        onChange={handleChange}
-                                                        aria-label="profile tabs"
-                                                    >
-                                                        <Tab
-                                                            sx={{
-                                                                display: 'flex',
-                                                                flexDirection: 'row',
-                                                                justifyContent: 'center',
-                                                                alignItems: 'center',
-                                                                textTransform: 'capitalize'
-                                                            }}
-                                                            icon={<UserOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                                                            label="Profile"
-                                                            {...a11yProps(0)}
-                                                        />
-                                                        <Tab
-                                                            sx={{
-                                                                display: 'flex',
-                                                                flexDirection: 'row',
-                                                                justifyContent: 'center',
-                                                                alignItems: 'center',
-                                                                textTransform: 'capitalize'
-                                                            }}
-                                                            icon={<SettingOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                                                            label="Setting"
-                                                            {...a11yProps(1)}
-                                                        />
-                                                    </Tabs>
-                                                </Box>
-                                                <TabPanel value={value} index={0} dir={theme.direction}>
-                                                    <ProfileTab handleLogout={handleLogout} />
-                                                </TabPanel>
-                                                <TabPanel value={value} index={1} dir={theme.direction}>
-                                                    <SettingTab />
-                                                </TabPanel>
-                                            </>
-                                        )}
+                                        <ProfileTab handleLogout={handleLogout} openDialog={openDialog} />
                                     </MainCard>
                                 </ClickAwayListener>
                             </Paper>

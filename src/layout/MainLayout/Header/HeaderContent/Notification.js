@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -49,9 +49,10 @@ const actionSX = {
 const Notification = () => {
     const theme = useTheme();
     const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
-
+    const user = localStorage.getItem('user');
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
+
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
@@ -152,7 +153,7 @@ const Notification = () => {
                                                     <Typography variant="h6">
                                                         Bạn
                                                         <Typography component="span" variant="subtitle1">
-                                                            Hoàng Anh{' '}
+                                                            {user.full_name}
                                                         </Typography>
                                                         Đã đăng ký phòng thành công
                                                     </Typography>

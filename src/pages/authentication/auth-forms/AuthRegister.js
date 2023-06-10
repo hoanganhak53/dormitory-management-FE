@@ -12,10 +12,14 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { axiosInstance } from 'utils/auth-header';
+import { useDispatch } from 'react-redux';
+import { openSnackBar } from 'store/reducers/menu';
 
 const AuthRegister = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showRepassword, setShowRepassword] = useState(false);
+    const dispatch = useDispatch();
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -39,6 +43,7 @@ const AuthRegister = () => {
                 initialValues={{
                     full_name: '',
                     email: '',
+                    mssv: '',
                     password: '',
                     repassword: '',
                     submit: null
@@ -46,6 +51,7 @@ const AuthRegister = () => {
                 validationSchema={Yup.object().shape({
                     full_name: Yup.string().max(255, 'Tên quá dài').required('Họ và tên là bắt buộc'),
                     email: Yup.string().email('Email không đúng định dạng').max(255).required('Email là trường bắt buộc'),
+                    mssv: Yup.string().required('Mã số sinh viên là trường bắt buộc'),
                     password: Yup.string()
                         .max(20, 'Mật khẩu tối đa 20 ký tự')
                         .required('Mật khẩu là trường bắt buộc')
@@ -56,11 +62,33 @@ const AuthRegister = () => {
                     try {
                         setStatus({ success: false });
                         setSubmitting(false);
+
+                        await axiosInstance
+                            .post('auth/register', {
+                                email: values.email,
+                                mssv: values.mssv,
+                                full_name: values.full_name,
+                                password: values.password
+                            })
+                            .then((res) => {
+                                dispatch(
+                                    openSnackBar({
+                                        message: res.data.message,
+                                        status: 'success'
+                                    })
+                                );
+                            });
                     } catch (err) {
                         console.error(err);
                         setStatus({ success: false });
-                        setErrors({ submit: err.message });
+                        setErrors({ submit: 'Tài khoản email đã tồn tại' });
                         setSubmitting(false);
+                        dispatch(
+                            openSnackBar({
+                                message: res.data.message,
+                                status: 'success'
+                            })
+                        );
                     }
                 }}
             >
@@ -106,6 +134,27 @@ const AuthRegister = () => {
                                     {touched.email && errors.email && (
                                         <FormHelperText error id="helper-text-email-signup">
                                             {errors.email}
+                                        </FormHelperText>
+                                    )}
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Stack spacing={1}>
+                                    <InputLabel htmlFor="mssv-signup">Mã số sinh viên*</InputLabel>
+                                    <OutlinedInput
+                                        id="mssv-login"
+                                        type="text"
+                                        value={values.mssv}
+                                        name="mssv"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        placeholder="20190000"
+                                        fullWidth
+                                        error={Boolean(touched.mssv && errors.mssv)}
+                                    />
+                                    {touched.mssv && errors.mssv && (
+                                        <FormHelperText error id="helper-text-mssv-signup">
+                                            {errors.mssv}
                                         </FormHelperText>
                                     )}
                                 </Stack>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material-ui
 import { Button, FormHelperText, Grid, InputLabel, TextField, Stack } from '@mui/material';
@@ -16,29 +16,57 @@ import { MenuItem, Typography } from '@mui/material/index';
 import { batchs, genders, majors } from 'constanst/index';
 import DatePicker from 'components/DatePicker';
 import { Chip } from '@mui/material/index';
+import CustomDialog from 'components/CustomDialog';
+import ChangePassword from './ChangePassword';
+import { axiosInstance } from 'utils/auth-header';
+import { useDispatch } from 'react-redux';
+import { openSnackBar } from 'store/reducers/menu';
 
 const AccountProfile = () => {
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [user, setUser] = useState({});
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const me = async () => {
+            try {
+                await axiosInstance.get('profile/me').then((res) => {
+                    console.log(res.data.data);
+                    setUser(res.data.data);
+                });
+            } catch (err) {}
+        };
+
+        return me;
+    }, []);
+
     return (
         <MainCard
             title="Quản lý hồ sơ"
             secondary={
-                true ? (
-                    <Chip label="Chưa xác thực" color="error" sx={{ borderRadius: '15px', fontSize: '12px' }} />
+                !user?.is_valid ? (
+                    <>
+                        <Chip label="Chưa xác thực" color="error" sx={{ borderRadius: '15px', fontSize: '12px', marginRight: '10px' }} />
+                        <Button onClick={() => setOpenDialog(true)}>Đổi mật khẩu</Button>
+                    </>
                 ) : (
-                    <Chip label="Đã xác thực" color="success" sx={{ borderRadius: '15px', fontSize: '2px' }} />
+                    <>
+                        <Chip label="Đã xác thực" color="success" sx={{ borderRadius: '15px', fontSize: '12px', marginRight: '10px' }} />
+                        <Button onClick={() => setOpenDialog(true)}>Đổi mật khẩu</Button>
+                    </>
                 )
             }
         >
             <Formik
+                enableReinitialize={true}
                 initialValues={{
-                    email: 'hopan@gmail.com',
-                    full_name: 'Hoang Anh',
-                    mssv: '20193980',
-                    major: 14,
-                    gender: 'male',
-                    batch: 67,
-                    phonenumber: '0912975138',
-                    birth: '2023-12-12',
+                    email: user.email,
+                    full_name: user.full_name || '',
+                    mssv: user.mssv || '',
+                    major: user.major || 14,
+                    gender: user.gender || 1,
+                    batch: user.batch || 64,
+                    phonenumber: user.phonenumber || '',
+                    birth: user.birth || '2012-12-27',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
@@ -49,12 +77,26 @@ const AccountProfile = () => {
                         .matches(/^[0-9]{10}$/, 'Số điện thoại không hợp lệ')
                         .required('Bắt buộc'),
                     gender: Yup.string().required('Bắt buộc'),
-                    major: Yup.string().required('Bắt buộc')
+                    major: Yup.string().required('Bắt buộc'),
+                    birth: Yup.string().required('Bắt buộc')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
                         setStatus({ success: false });
                         setSubmitting(false);
+
+                        const new_values = values;
+                        delete new_values.email;
+                        await axiosInstance.put('profile/change', new_values).then((res) => {
+                            setUser(res.data.data);
+
+                            dispatch(
+                                openSnackBar({
+                                    message: res.data.message,
+                                    status: 'success'
+                                })
+                            );
+                        });
                     } catch (err) {
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
@@ -248,6 +290,13 @@ const AccountProfile = () => {
                     </form>
                 )}
             </Formik>
+            <CustomDialog
+                title="Đổi mật khẩu"
+                width="xs"
+                bodyComponent={<ChangePassword close={() => setOpenDialog(false)} />}
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+            />
         </MainCard>
     );
 };

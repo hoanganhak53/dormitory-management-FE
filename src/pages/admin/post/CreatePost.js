@@ -5,7 +5,7 @@ import { Box, Button } from '../../../../node_modules/@mui/material/index';
 import { styled } from '@mui/system';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-const ImagePicker = styled(Box)`
+export const ImagePicker = styled(Box)`
     margin-top: 10px;
     padding: 8px 12px;
     border: 1px solid #d9d9d9;
