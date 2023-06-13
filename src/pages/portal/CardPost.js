@@ -6,36 +6,30 @@ import { Button, CardActionArea, CardActions } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
-const CardPost = () => {
+const CardPost = ({ post = {} }) => {
     const navigator = useNavigate();
+
+    function stripHtml(html) {
+        return html.replace(/<[^>]+>/g, '');
+    }
 
     return (
         <MainCard np={true} contentSX={{ p: '0px' }} sx={{ height: '500px' }}>
             <CardActionArea>
-                <CardMedia
-                    component="img"
-                    height="230"
-                    image="https://khoinguonsangtao.vn/wp-content/uploads/2022/12/background-vintage-lich-su.jpg"
-                    alt="post_img"
-                />
+                <CardMedia component="img" height="230" image={post.image} alt="post_img" />
                 <CardContent sx={{ pb: '0px' }}>
                     <Typography gutterBottom variant="h4" component="div">
-                        Lizard
+                        {post.title}
                     </Typography>
-                    <div style={{ overflow: 'hidden', maxHeight: '10rem' }}>
+                    <div style={{ overflow: 'hidden', maxHeight: '8rem' }}>
                         <Typography variant="h6" color="text.secondary" sx={{ textOverflow: 'ellipsis' }}>
-                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents
-                            except AntarcticaLizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across
-                            all continents except AntarcticaLizards are a widespread group of squamate reptiles, with over 6,000 species,
-                            ranging across all continents except AntarcticaLizards are a widespread group of squamate reptiles, with over
-                            6,000 species, ranging across all continents except AntarcticaLizards are a widespread group of squamate
-                            reptiles, with over 6,000 species, ranging across all continents except Antarctica
+                            {stripHtml(post.content)}
                         </Typography>
                     </div>
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary" onClick={() => navigator('post/1')}>
+                <Button size="small" color="primary" onClick={() => navigator(`/portal/post/${post.id}`)}>
                     Xem thêm
                 </Button>
             </CardActions>

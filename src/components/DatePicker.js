@@ -27,9 +27,9 @@ const Input = styled('input')({
     }
 });
 
-function DatePicker({ value, onChange }) {
+function DatePicker({ value, onChange, type }) {
     const [selectedDate, setSelectedDate] = useState(value);
-
+    const date_type = type ? type : 'date';
     const handleDateChange = (event) => {
         setSelectedDate(event.target.value);
         onChange(event);
@@ -37,7 +37,15 @@ function DatePicker({ value, onChange }) {
 
     return (
         <Container>
-            <Input type="date" id="birth" value={selectedDate} name="birth" onChange={handleDateChange} min="1997-01-01" max="2012-12-31" />
+            <Input
+                type={date_type}
+                id="birth"
+                value={selectedDate}
+                name="birth"
+                onChange={handleDateChange}
+                min="1997-01-01"
+                max="2026-12-31"
+            />
         </Container>
     );
 }

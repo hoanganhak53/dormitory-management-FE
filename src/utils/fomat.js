@@ -1,4 +1,5 @@
 import { genders, majors } from 'constanst/index';
+import moment from '../../node_modules/moment/moment';
 
 export const formatCurrency = (number) => {
     const roundedNumber = Number(number).toFixed(0).toString();
@@ -19,4 +20,11 @@ export const formatGender = (number) => {
 
 export const formatMajor = (number) => {
     return majors[number - 1]?.label || 'NA';
+};
+
+export const formatTime = (str) => {
+    const momentObj = moment(str);
+    const newTimeStr = momentObj.format('DD/MM/YYYY HH:mm');
+
+    return newTimeStr;
 };

@@ -1,5 +1,6 @@
 import { Grid, Typography } from '@mui/material/index';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from '../../../../node_modules/react-router-dom/dist/index';
 
 const TitlePostTypography = styled(Typography)`
     &:hover {
@@ -8,16 +9,8 @@ const TitlePostTypography = styled(Typography)`
     }
 `;
 
-export const PostSidebar = () => {
-    const postTitles = [
-        'Anime: Một nghệ thuật hoạt hình phát triển từ Nhật Bản',
-        'Các thể loại anime phổ biến và đa dạng',
-        'Top 5 bộ anime nổi tiếng mà bạn không nên bỏ qua',
-        'Sức ảnh hưởng của anime đến văn hóa đại chúng',
-        'Anime và các lĩnh vực liên quan: Manga, cosplay và ngành công nghiệp giải trí',
-        'Sự phát triển của việc xem anime trực tuyến và sự lan rộng của cộng đồng người hâm mộ'
-    ];
-
+export const PostSidebar = ({ posts = [] }) => {
+    const navigate = useNavigate();
     return (
         <Grid container pl={8}>
             <Grid item mb={2}>
@@ -25,9 +18,17 @@ export const PostSidebar = () => {
                     Bài viết mới
                 </Typography>
             </Grid>
-            {postTitles.map((e) => (
-                <Grid item mb={3}>
-                    <TitlePostTypography variant="h5">{e}</TitlePostTypography>
+            {posts.slice(0, 6).map((e) => (
+                <Grid item mb={3} key={e.id}>
+                    <TitlePostTypography
+                        onClick={() => {
+                            navigate(`/portal/post/${e.id}`);
+                            window.location.reload();
+                        }}
+                        variant="h5"
+                    >
+                        {e.title}
+                    </TitlePostTypography>
                 </Grid>
             ))}
         </Grid>

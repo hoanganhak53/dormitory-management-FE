@@ -1,7 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, FormLabel, Grid, MenuItem, TextField } from '@mui/material/index';
+import { useDispatch } from '../../../../node_modules/react-redux/es/exports';
+import { openSnackBar } from 'store/reducers/menu';
+import { axiosInstance } from 'utils/auth-header';
 
-const RoomEdit = ({ room }) => {
+const RoomEdit = ({ close }) => {
+    const [room_type, setRoomType] = useState({ room_type_name: '', gender: 1, capacity: 4, room_price: '' });
+    const dispatch = useDispatch();
+
+    const submit = async () => {
+        try {
+            await axiosInstance.post('room_type', room_type).then(async (res) => {
+                dispatch(
+                    openSnackBar({
+                        message: res.data.message,
+                        status: 'success'
+                    })
+                );
+            });
+            close();
+        } catch (err) {
+            dispatch(
+                openSnackBar({
+                    message: err?.response?.data?.detail,
+                    status: 'error'
+                })
+            );
+        }
+    };
+
     return (
         <Grid container>
             <Grid container justifyContent="space-between">
@@ -9,7 +36,14 @@ const RoomEdit = ({ room }) => {
                     <FormLabel>Tên loại phòng</FormLabel>
                     <TextField
                         type="text"
-                        defaultValue="Phòng 4 nữ full"
+                        value={room_type.room_type_name}
+                        onChange={(e) =>
+                            setRoomType((prev) => {
+                                const rs = { ...prev };
+                                rs.room_type_name = e.target.value;
+                                return rs;
+                            })
+                        }
                         placeholder="Tên loại phòng"
                         fullWidth
                         sx={{ marginTop: '10px', marginBottom: '20px' }}
@@ -19,7 +53,19 @@ const RoomEdit = ({ room }) => {
             <Grid container justifyContent="space-between">
                 <Grid item xs={12}>
                     <FormLabel>Giới tính</FormLabel>
-                    <TextField select fullWidth value="" sx={{ marginTop: '10px', marginBottom: '20px' }}>
+                    <TextField
+                        select
+                        fullWidth
+                        value={room_type?.gender}
+                        onChange={(e) =>
+                            setRoomType((prev) => {
+                                const rs = { ...prev };
+                                rs.gender = e.target.value;
+                                return rs;
+                            })
+                        }
+                        sx={{ marginTop: '10px', marginBottom: '20px' }}
+                    >
                         <MenuItem value={1}>Nam</MenuItem>
                         <MenuItem value={2}>Nữ</MenuItem>
                     </TextField>
@@ -30,7 +76,14 @@ const RoomEdit = ({ room }) => {
                     <FormLabel>Giá phòng</FormLabel>
                     <TextField
                         type="text"
-                        defaultValue="400000"
+                        value={room_type?.room_price}
+                        onChange={(e) =>
+                            setRoomType((prev) => {
+                                const rs = { ...prev };
+                                rs.room_price = e.target.value;
+                                return rs;
+                            })
+                        }
                         placeholder="Giá phòng"
                         fullWidth
                         sx={{ marginTop: '10px', marginBottom: '20px' }}
@@ -40,7 +93,14 @@ const RoomEdit = ({ room }) => {
                     <FormLabel>Số người</FormLabel>
                     <TextField
                         type="text"
-                        defaultValue="8"
+                        value={room_type?.capacity}
+                        onChange={(e) =>
+                            setRoomType((prev) => {
+                                const rs = { ...prev };
+                                rs.capacity = e.target.value;
+                                return rs;
+                            })
+                        }
                         placeholder="Số người tối đa"
                         fullWidth
                         sx={{ marginTop: '10px', marginBottom: '20px' }}
@@ -48,7 +108,7 @@ const RoomEdit = ({ room }) => {
                 </Grid>
             </Grid>
             <Grid container justifyContent="end">
-                <Button>Tạo</Button>
+                <Button onClick={submit}>Tạo</Button>
             </Grid>
         </Grid>
     );

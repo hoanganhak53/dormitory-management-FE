@@ -64,7 +64,7 @@ const StudentInfo = () => {
                 <Grid item xs={12} md={6} lg={4} alignItems="center" justifyContent="center">
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Trạng thái:</Typography>
-                        <Typography color={user.is_more_info ? 'success.main' : 'error.main'}>
+                        <Typography color={user.is_valid ? 'success.main' : 'error.main'}>
                             {user.is_valid ? 'Đã xác thực' : 'Chưa xác thực'}
                         </Typography>
                     </Stack>

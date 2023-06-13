@@ -1,5 +1,5 @@
 import MainCard from 'components/MainCard';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material-ui
 import { Button, Grid, FormControlLabel, Radio, FormControl, FormLabel, RadioGroup, IconButton, Checkbox } from '@mui/material/index';
@@ -10,37 +10,47 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { TextField, Typography, Box } from '@mui/material/index';
 import CustomDialog from 'components/CustomDialog';
 import CreateQA from './CreateQA';
+import { axiosInstance } from 'utils/auth-header';
+import { useDispatch } from '../../../../node_modules/react-redux/es/exports';
+import { openSnackBar } from 'store/reducers/menu';
 
 export const AdminForm = () => {
     const [openDialog, setOpenDialog] = useState(false);
-    const [QA, setQA] = useState(null);
-    const [form, setForm] = useState([
-        {
-            id: 1,
-            weight: 0.3,
-            type: 0,
-            answers: ['Tùy chọn 1', 'Tùy chọn 2'],
-            question: 'abc',
-            matrix: {
-                0: [1, 1],
-                1: [1, 1]
-            }
-        }
-    ]);
+    const [QA, setQA] = useState({});
+    const [form, setForm] = useState([]);
+    const dispatch = useDispatch();
+    const [refresh, setRefresh] = useState(false);
 
-    const addItemForm = (item) => {
-        if (form.find((e) => e.id == item?.id)) {
-            setForm((prev) => {
-                const rs = prev.map((e) => {
-                    if (e.id == item?.id) {
-                        return item;
-                    }
-                    return e;
+    useEffect(() => {
+        const init = async () => {
+            try {
+                await axiosInstance.get('form/list').then(async (res) => {
+                    setForm(res.data.data);
                 });
-                return rs;
+            } catch (err) {}
+        };
+
+        return init;
+    }, [openDialog, refresh]);
+
+    const deleteQA = async (e) => {
+        try {
+            await axiosInstance.delete(`form/${e.id}`).then(async (res) => {
+                dispatch(
+                    openSnackBar({
+                        message: res.data.message,
+                        status: 'success'
+                    })
+                );
             });
-        } else {
-            setForm([...form, item]);
+            setRefresh(!refresh);
+        } catch (err) {
+            dispatch(
+                openSnackBar({
+                    message: err?.response?.data?.detail,
+                    status: 'error'
+                })
+            );
         }
     };
 
@@ -51,7 +61,14 @@ export const AdminForm = () => {
                     <Typography variant="h5">Biểu mẫu thông tin bổ sung</Typography>
                 </Grid>
                 <Grid item>
-                    <Button onClick={() => setOpenDialog(true)}>Tạo câu hỏi</Button>
+                    <Button
+                        onClick={() => {
+                            setOpenDialog(true);
+                            setQA({});
+                        }}
+                    >
+                        Tạo câu hỏi
+                    </Button>
                 </Grid>
             </Grid>
             {form.map((e, index) => (
@@ -68,7 +85,7 @@ export const AdminForm = () => {
                                         disabled
                                         key={option + i}
                                         value={option}
-                                        control={e.type == 1 ? <Checkbox /> : <Radio />}
+                                        control={e.form_type == 1 ? <Checkbox /> : <Radio />}
                                         label={option}
                                     />
                                 ))}
@@ -86,11 +103,7 @@ export const AdminForm = () => {
                             >
                                 <EditOutlined />
                             </IconButton>
-                            <IconButton
-                                edge="end"
-                                aria-label="delete"
-                                onClick={() => setForm(form.filter((e, f_index) => f_index != index))}
-                            >
+                            <IconButton edge="end" aria-label="delete" onClick={() => deleteQA(e)}>
                                 <DeleteOutlined />
                             </IconButton>
                         </Box>
@@ -98,7 +111,7 @@ export const AdminForm = () => {
                 </Grid>
             ))}
 
-            <Grid item xs={7}>
+            {/* <Grid item xs={7}>
                 <MainCard>
                     <FormLabel id="describe">
                         Giới thiệu ngắn gọn
@@ -115,19 +128,12 @@ export const AdminForm = () => {
                         disabled
                     />
                 </MainCard>
-            </Grid>
-
-            {/* <Grid container justifyContent="center" mt={2}>
-                <AnimateButton>
-                    <Button disableElevation size="small" type="submit" variant="contained" color="primary">
-                        Lưu biểu mẫu
-                    </Button>
-                </AnimateButton>
             </Grid> */}
+
             <CustomDialog
                 title="Tạo câu hỏi"
                 width="sm"
-                bodyComponent={<CreateQA QA={QA} addItemForm={addItemForm} setOpenDialog={setOpenDialog} />}
+                bodyComponent={<CreateQA QA={QA} setOpenDialog={setOpenDialog} />}
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
             />

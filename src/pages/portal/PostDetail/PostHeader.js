@@ -1,16 +1,17 @@
 import { Grid, Typography } from '@mui/material/index';
 import { FieldTimeOutlined } from '@ant-design/icons';
+import { formatTime } from 'utils/fomat';
 
-export const PostHeader = () => {
+export const PostHeader = ({ post }) => {
     return (
         <Grid container justifyContent="center" py={5}>
-            <Grid item sx={12} md={8} lg={8}>
+            <Grid item xs={12} md={8} lg={8}>
                 <Typography variant="h2" sx={{ textTransform: 'uppercase' }}>
-                    Thông báo xếp ở nôi trú cho sinh viên K67 KỲ I NĂM HỌC 2022-2023
+                    {post?.title}
                 </Typography>
                 <Typography variant="h6" color="secondary.main">
                     <FieldTimeOutlined />
-                    &ensp;18 Th5 2023
+                    &ensp;{formatTime(post?.created_at)}
                 </Typography>
             </Grid>
         </Grid>

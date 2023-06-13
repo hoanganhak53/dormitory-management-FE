@@ -1,61 +1,93 @@
 import { Grid, Typography } from '@mui/material/index';
 import TableComponent from 'components/table/TableComponent';
 import { Chip } from '@mui/material/index';
-import { Button } from '../../../../node_modules/@mui/material/index';
+import { Button, IconButton } from '../../../../node_modules/@mui/material/index';
 import CustomDialog from 'components/CustomDialog';
-import React from 'react';
+import React, { useEffect } from 'react';
 import CreateRegistration from './CreateRegistration';
+import { axiosInstance } from 'utils/auth-header';
+import { formatTime } from 'utils/fomat';
+import { EditOutlined } from '@ant-design/icons';
 
 const ARegistration = () => {
     const [openDialog, setOpenDialog] = React.useState(false);
-    const [post, setPost] = React.useState({});
+    const [registrations, setRegistrations] = React.useState([]);
+    const [target, setTarget] = React.useState({});
 
-    const generateData = (count) => {
-        const data = [];
-        for (let i = 1; i <= count; i++) {
-            data.push({
-                id: i,
-                name: `Đăng ký chính thức kì 20222`,
-                semester: `20222`,
-                start_date: `12/05/2023 12:05`,
-                end_date: `12/05/2023 12:05`,
-                start_register: `12/05/2023 12:05`,
-                end_register: `12/05/2023 12:05`,
-                paid_date: `12/05/2023 12:05`,
-                status: i
-            });
-        }
-        return data;
-    };
-
-    const data = generateData(10);
     const columns = [
-        { field: 'id', headerName: 'ID', width: 50 },
-        { field: 'name', headerName: 'Tên đợt đăng ký', width: 120 },
+        { field: 'registration_name', headerName: 'Tên đợt đăng ký', width: 200 },
         { field: 'semester', headerName: 'Kỳ học', width: 80 },
-        { field: 'start_date', headerName: 'Ngày bắt đầu', width: 120 },
-        { field: 'end_date', headerName: 'Ngày kết thúc', width: 120 },
-        { field: 'start_register', headerName: 'Mở đăng ký', width: 120 },
-        { field: 'end_register', headerName: 'Đóng đăng ký', width: 120 },
-        { field: 'paid_date', headerName: 'Hạn nộp', width: 120 },
+        {
+            field: 'action',
+            headerName: 'Ngày bắt đầu',
+            width: 120,
+            renderCell: function (row) {
+                return formatTime(row.start_date);
+            }
+        },
+        {
+            field: 'action',
+            headerName: 'Ngày kết thúc',
+            width: 120,
+            renderCell: function (row) {
+                return formatTime(row.end_date);
+            }
+        },
+        {
+            field: 'action',
+            headerName: 'Mở đăng ký',
+            width: 120,
+            renderCell: function (row) {
+                return formatTime(row.start_register);
+            }
+        },
+        {
+            field: 'action',
+            headerName: 'Đóng đăng ký',
+            width: 120,
+            renderCell: function (row) {
+                return formatTime(row.end_register);
+            }
+        },
+        {
+            field: 'action',
+            headerName: 'Hạn nộp',
+            width: 120,
+            renderCell: function (row) {
+                return formatTime(row.paid_date);
+            }
+        },
         {
             field: 'action',
             headerName: '',
-            width: 100,
+            width: 20,
             renderCell: (row) => {
                 return (
-                    <Button
+                    <IconButton
                         onClick={() => {
-                            setPost(row);
+                            setTarget(row);
                             setOpenDialog(true);
                         }}
                     >
-                        Chỉnh sửa
-                    </Button>
+                        <EditOutlined />
+                    </IconButton>
                 );
             }
         }
     ];
+
+    useEffect(() => {
+        const init = async () => {
+            try {
+                await axiosInstance.get('registration/list').then(async (res) => {
+                    setRegistrations(res.data.data);
+                });
+            } catch (err) {}
+        };
+
+        return init;
+    }, [openDialog]);
+
     return (
         <Grid item xs={12} md={12} lg={12}>
             <Grid container alignItems="center" justifyContent="space-between" mb={2}>
@@ -65,7 +97,7 @@ const ARegistration = () => {
                 <Grid item>
                     <Button
                         onClick={() => {
-                            setPost({});
+                            setTarget({});
                             setOpenDialog(true);
                         }}
                     >
@@ -73,11 +105,11 @@ const ARegistration = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <TableComponent columns={columns} data={data} />
+            <TableComponent columns={columns} data={registrations} />
             <CustomDialog
                 title="Đợt đăng ký"
                 width="sm"
-                bodyComponent={<CreateRegistration></CreateRegistration>}
+                bodyComponent={<CreateRegistration registration_old={target} close={() => setOpenDialog(false)}></CreateRegistration>}
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
             />

@@ -2,12 +2,13 @@ import TableComponent from 'components/table/TableComponent';
 import { Chip } from '@mui/material/index';
 import { Button, MenuItem, Stack, TextField, Grid } from '@mui/material/index';
 import CustomDialog from 'components/CustomDialog';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Menu, Typography } from '@mui/material/index';
-import { formatCurrency } from 'utils/fomat';
+import { formatCurrency, formatGender } from 'utils/fomat';
 import EditRoom from './EditRoom';
 import RoomType from './RoomType';
 import CreateApartment from './CreateApartment';
+import { axiosInstance } from 'utils/auth-header';
 
 const Apartment = () => {
     const [openDialog, setOpenDialog] = React.useState(false);
@@ -17,7 +18,11 @@ const Apartment = () => {
         width: 'sm'
     });
 
-    const [apartment, setApartment] = React.useState({});
+    const [apartments, setApartments] = React.useState([]);
+    const [roomTypes, setRoomTypes] = React.useState([]);
+    const [rooms, setRooms] = React.useState([]);
+    const [target, setTarget] = React.useState(apartments[0] || { apartment_name: '' });
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -27,28 +32,29 @@ const Apartment = () => {
         setAnchorEl(null);
     };
 
-    const generateData = (count) => {
-        const data = [];
-        for (let i = 1; i <= count; i++) {
-            data.push({
-                id: i,
-                room_number: `211`,
-                apartment_name: 'B1',
-                capacity: `8`,
-                student_num: `6`,
-                room_price: `400000`,
-                gender: `Nữ`,
-                room_type_name: `Phòng 8 nữ full`,
-                status: i
-            });
-        }
-        return data;
-    };
+    useEffect(() => {
+        const init = async () => {
+            try {
+                await axiosInstance.get('room_type/list').then((res) => {
+                    setRoomTypes(res.data.data);
+                });
 
-    const data = generateData(10);
+                await axiosInstance.get('apartment/list').then(async (res) => {
+                    setApartments(res.data.data);
+                    setTarget(res.data.data[0]);
+                });
+
+                await axiosInstance.get(`room/list`).then((res) => {
+                    setRooms(res.data.data);
+                });
+            } catch (err) {}
+        };
+
+        return init;
+    }, [openDialog]);
+
     const columns = [
-        { field: 'id', headerName: 'ID', width: 50 },
-        { field: 'room_number', headerName: 'Số phòng', width: 100 },
+        { field: 'room_name', headerName: 'Số phòng', width: 100 },
         { field: 'apartment_name', headerName: 'Tên tòa nhà', width: 120 },
         {
             field: 'action',
@@ -66,7 +72,14 @@ const Apartment = () => {
                 return formatCurrency(row.room_price);
             }
         },
-        { field: 'gender', headerName: 'Giới tính', width: 100 },
+        {
+            field: 'action',
+            headerName: 'Giới tính',
+            width: 100,
+            renderCell: function (row) {
+                return formatGender(row.gender);
+            }
+        },
         { field: 'room_type_name', headerName: 'Loại phòng', width: 120 },
         {
             field: 'action',
@@ -78,7 +91,14 @@ const Apartment = () => {
                         onClick={() => {
                             setDialogContent({
                                 title: 'Chỉnh sửa phòng',
-                                bodyComponent: <EditRoom></EditRoom>,
+                                bodyComponent: (
+                                    <EditRoom
+                                        apartments={apartments}
+                                        room_types={roomTypes}
+                                        room={row}
+                                        close={() => setOpenDialog(false)}
+                                    ></EditRoom>
+                                ),
                                 width: 'xs'
                             });
                             setOpenDialog(true);
@@ -90,18 +110,45 @@ const Apartment = () => {
             }
         }
     ];
+
+    const countStudents = () => {
+        let rs = 0;
+        rooms.map((e) => {
+            if (e.apartment_id == target.id) {
+                rs += e.student_num;
+            }
+        });
+        return rs;
+    };
+
     return (
         <Grid item xs={12} md={12} lg={12}>
             <Grid container alignItems="center" justifyContent="space-between" mb={2}>
                 <Grid item xs={3.5}>
                     <Stack spacing={1} direction="row" alignItems="center">
-                        <TextField id="apartment" value="" select name="apartment" label="Toà nhà" fullWidth>
-                            <MenuItem value={1}>B1</MenuItem>
-                            <MenuItem value={2}>B2</MenuItem>
-                            <MenuItem value={3}>B3</MenuItem>
+                        <TextField
+                            id="apartment"
+                            value={target.apartment_name}
+                            select
+                            name="apartment"
+                            label="Toà nhà"
+                            fullWidth
+                            onChange={(e) => setTarget(apartments.find((rt) => rt?.apartment_name === e.target.value))}
+                        >
+                            {apartments.map((e) => (
+                                <MenuItem key={e.id} value={e.apartment_name}>
+                                    {e.apartment_name}
+                                </MenuItem>
+                            ))}
                         </TextField>
-                        <Chip label="10 phòng" sx={{ width: 'fit-content', borderRadius: '15px', fontSize: '14px' }}></Chip>
-                        <Chip label="70 sinh viên" sx={{ width: 'fit-content', borderRadius: '15px', fontSize: '14px' }}></Chip>
+                        <Chip
+                            label={`${rooms.filter((e) => e.apartment_id == target.id).length} phòng`}
+                            sx={{ width: 'fit-content', borderRadius: '15px', fontSize: '14px' }}
+                        ></Chip>
+                        <Chip
+                            label={`${countStudents()} sinh viên`}
+                            sx={{ width: 'fit-content', borderRadius: '15px', fontSize: '14px' }}
+                        ></Chip>
                     </Stack>
                 </Grid>
                 <Grid item>
@@ -133,7 +180,7 @@ const Apartment = () => {
                             onClick={() => {
                                 setDialogContent({
                                     title: 'Tạo kiểu phòng',
-                                    bodyComponent: <RoomType></RoomType>,
+                                    bodyComponent: <RoomType close={() => setOpenDialog(false)}></RoomType>,
                                     width: 'xs'
                                 });
                                 setOpenDialog(true);
@@ -146,7 +193,13 @@ const Apartment = () => {
                             onClick={() => {
                                 setDialogContent({
                                     title: 'Tạo phòng',
-                                    bodyComponent: <EditRoom></EditRoom>,
+                                    bodyComponent: (
+                                        <EditRoom
+                                            apartments={apartments}
+                                            room_types={roomTypes}
+                                            close={() => setOpenDialog(false)}
+                                        ></EditRoom>
+                                    ),
                                     width: 'xs'
                                 });
                                 setOpenDialog(true);
@@ -159,7 +212,7 @@ const Apartment = () => {
                             onClick={() => {
                                 setDialogContent({
                                     title: 'Tạo tòa nhà',
-                                    bodyComponent: <CreateApartment></CreateApartment>,
+                                    bodyComponent: <CreateApartment close={() => setOpenDialog(false)}></CreateApartment>,
                                     width: 'xs'
                                 });
                                 setOpenDialog(true);
@@ -172,7 +225,9 @@ const Apartment = () => {
                             onClick={() => {
                                 setDialogContent({
                                     title: 'Sửa tòa nhà',
-                                    bodyComponent: <CreateApartment></CreateApartment>,
+                                    bodyComponent: (
+                                        <CreateApartment apartment={target} close={() => setOpenDialog(false)}></CreateApartment>
+                                    ),
                                     width: 'xs'
                                 });
                                 setOpenDialog(true);
@@ -184,7 +239,7 @@ const Apartment = () => {
                     </Menu>
                 </Grid>
             </Grid>
-            <TableComponent columns={columns} data={data} />
+            <TableComponent columns={columns} data={rooms.filter((e) => e.apartment_id == target.id)} />
             <CustomDialog
                 title={dialogConent.title}
                 bodyComponent={dialogConent.bodyComponent}

@@ -3,40 +3,46 @@ import TableComponent from 'components/table/TableComponent';
 import { Chip } from '@mui/material/index';
 import { Button } from '../../../../node_modules/@mui/material/index';
 import CustomDialog from 'components/CustomDialog';
-import React from 'react';
+import React, { useEffect } from 'react';
 import CreatePost from './CreatePost';
+import { axiosInstance } from 'utils/auth-header';
+import { formatTime } from 'utils/fomat';
 
 const AdminPost = () => {
     const [openDialog, setOpenDialog] = React.useState(false);
+    const [postList, setPostList] = React.useState([]);
     const [post, setPost] = React.useState({});
 
-    const generateData = (count) => {
-        const data = [];
-        for (let i = 1; i <= count; i++) {
-            data.push({
-                id: i,
-                name: `Hoàng Anh`,
-                title: `THÔNG BÁO XẾP Ở NÔI TRÚ CHO SINH VIÊN K67 KỲ I NĂM HỌC 2022-2023`,
-                created_date: `12/05/2023 12:05`,
-                status: i
-            });
-        }
-        return data;
-    };
+    useEffect(() => {
+        const init = async () => {
+            try {
+                await axiosInstance.get('post/list/all').then(async (res) => {
+                    setPostList(res.data.data);
+                });
+            } catch (err) {}
+        };
 
-    const data = generateData(10);
+        return init;
+    }, [openDialog]);
+
     const columns = [
-        { field: 'id', headerName: 'ID', width: 50 },
-        { field: 'name', headerName: 'Người tạo', width: 120 },
+        { field: 'created_user', headerName: 'Người tạo', width: 120 },
         { field: 'title', headerName: 'Tiêu đề', width: 450 },
-        { field: 'created_date', headerName: 'Ngày tạo', width: 120 },
+        {
+            field: 'action',
+            headerName: 'Ngày tạo',
+            width: 120,
+            renderCell: function (row) {
+                return formatTime(row.created_at);
+            }
+        },
         {
             field: 'action',
             headerName: 'Trạng thái',
             width: 80,
             renderCell: (row) => {
-                const label = row.status % 2 ? 'Tạm ẩn' : 'Hoạt động';
-                const color = row.status % 2 ? 'error' : 'success';
+                const label = row.status == 2 ? 'Tạm ẩn' : 'Hoạt động';
+                const color = row.status == 2 ? 'error' : 'success';
                 return (
                     <Chip label={label} sx={{ width: '80px', borderRadius: '15px', fontSize: '12px' }} color={color} size="small"></Chip>
                 );
@@ -77,11 +83,11 @@ const AdminPost = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <TableComponent columns={columns} data={data} />
+            <TableComponent columns={columns} data={postList} />
             <CustomDialog
                 title="Bài viết"
                 width="sm"
-                bodyComponent={<CreatePost post={post} />}
+                bodyComponent={<CreatePost old_post={post} close={() => setOpenDialog(false)} />}
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
             />

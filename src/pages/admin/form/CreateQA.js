@@ -5,6 +5,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { openSnackBar } from 'store/reducers/menu';
 import MatrixSelect, { valueMatrix } from './MatrixSelect';
+import { axiosInstance } from 'utils/auth-header';
 
 export const debounce = (func, delay) => {
     let timeoutId;
@@ -25,9 +26,9 @@ const generateMatrix = (n) => {
     return result;
 };
 
-const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
+const CreateQA = ({ setOpenDialog, QA = {} }) => {
     const [question, setQuestion] = useState(QA?.question || '');
-    const [type, setType] = useState(QA?.type || 0);
+    const [form_type, setFormType] = useState(QA?.form_type || 2);
     const [weight, setWeight] = useState(QA?.weight || 0.1);
     const [answers, setAnwsers] = useState(QA?.answers || []);
     const [matrix, setMatrix] = useState(QA?.matrix || {});
@@ -53,9 +54,9 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
             );
             return;
         }
-        if (event.key == 'Enter') {
+        if (event.key == 'Enter' && event.target.value != '') {
             setAnwsers((prev) => [...prev, event.target.value]);
-            event.target.value = `Tùy chọn ${answers.length + 2}`;
+            event.target.value = ``;
         }
     };
 
@@ -104,6 +105,55 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
         setStep(1);
     };
 
+    const submit = async () => {
+        try {
+            if (QA.id != null) {
+                await axiosInstance
+                    .put('form', {
+                        weight,
+                        form_type,
+                        answers,
+                        question,
+                        matrix,
+                        id: QA.id
+                    })
+                    .then(async (res) => {
+                        dispatch(
+                            openSnackBar({
+                                message: res.data.message,
+                                status: 'success'
+                            })
+                        );
+                    });
+            } else {
+                await axiosInstance
+                    .post('form', {
+                        weight,
+                        form_type,
+                        answers,
+                        question,
+                        matrix
+                    })
+                    .then(async (res) => {
+                        dispatch(
+                            openSnackBar({
+                                message: res.data.message,
+                                status: 'success'
+                            })
+                        );
+                    });
+            }
+            setOpenDialog(false);
+        } catch (err) {
+            dispatch(
+                openSnackBar({
+                    message: err?.response?.data?.detail,
+                    status: 'error'
+                })
+            );
+        }
+    };
+
     if (step) {
         return (
             <Grid container px={1.5} py={2}>
@@ -137,19 +187,8 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
                 <MatrixSelect matrix={matrix} setElement={setElement} />
                 <Grid container justifyContent="space-between" mt={3}>
                     <Button onClick={() => setStep(0)}>Quay lại</Button>
-                    <Button
-                        onClick={() => {
-                            console.log({
-                                weight,
-                                type,
-                                answers,
-                                question,
-                                matrix
-                            });
-                        }}
-                        variant="contained"
-                    >
-                        {QA ? <>Sửa câu hỏi</> : <>Tạo câu hỏi</>}
+                    <Button onClick={submit} variant="contained">
+                        {QA.id ? <>Sửa câu hỏi</> : <>Tạo câu hỏi</>}
                     </Button>
                 </Grid>
             </Grid>
@@ -170,8 +209,8 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
                     />
                 </Grid>
                 <Grid item xs={4}>
-                    <TextField id="gender" select value={type} onChange={(e) => setType(e.target.value)} fullWidth>
-                        <MenuItem value={0}>
+                    <TextField id="gender" select value={form_type} onChange={(e) => setFormType(e.target.value)} fullWidth>
+                        <MenuItem value={2}>
                             <Radio sx={{ padding: '4px', paddingRight: '10px' }} disabled />
                             Trắc nghiệm
                         </MenuItem>
@@ -186,7 +225,11 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
                 return (
                     <Grid container mb={2} key={e + index} alignItems="center">
                         <Grid item xs={0.9}>
-                            {type == 1 ? <Checkbox disabled sx={{ marginRight: '0px' }} /> : <Radio disabled sx={{ marginRight: '0px' }} />}
+                            {form_type == 1 ? (
+                                <Checkbox disabled sx={{ marginRight: '0px' }} />
+                            ) : (
+                                <Radio disabled sx={{ marginRight: '0px' }} />
+                            )}
                         </Grid>
 
                         <Grid item xs={10.7}>
@@ -216,15 +259,14 @@ const CreateQA = ({ addItemForm, setOpenDialog, QA = null }) => {
             })}
             <Grid container alignItems="center">
                 <Grid item xs={0.9}>
-                    {type == 1 ? <Checkbox disabled sx={{ marginRight: '0px' }} /> : <Radio disabled sx={{ marginRight: '0px' }} />}
+                    {form_type == 1 ? <Checkbox disabled sx={{ marginRight: '0px' }} /> : <Radio disabled sx={{ marginRight: '0px' }} />}
                 </Grid>
 
                 <Grid item xs={11}>
                     <TextField
                         variant="standard"
-                        defaultValue={`Tùy chọn ${answers.length + 1}`}
+                        placeholder={`Tùy chọn ${answers.length + 1}`}
                         onKeyDown={(e) => addAnwsers(e)}
-                        placeholder="Câu trả lời"
                         fullWidth
                     />
                 </Grid>

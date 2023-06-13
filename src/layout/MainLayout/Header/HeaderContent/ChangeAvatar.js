@@ -17,7 +17,6 @@ const ChangeAvatar = ({ close }) => {
         const storageRef = ref(storage, img_name);
         uploadBytes(storageRef, image).then((snapshot) => {
             getDownloadURL(ref(storage, img_name)).then(async (url) => {
-                console.log(url);
                 await axiosInstance
                     .put('profile/change', {
                         avatar: url
@@ -33,6 +32,7 @@ const ChangeAvatar = ({ close }) => {
                                 status: 'success'
                             })
                         );
+                        window.location.reload();
                     });
             });
         });
