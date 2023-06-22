@@ -23,6 +23,8 @@ import { useDispatch } from 'react-redux';
 import { openSnackBar } from 'store/reducers/menu';
 
 const AccountProfile = () => {
+    const role = localStorage.getItem('role');
+
     const [openDialog, setOpenDialog] = React.useState(false);
     const [user, setUser] = useState({});
     const dispatch = useDispatch();
@@ -38,6 +40,112 @@ const AccountProfile = () => {
 
         return me;
     }, []);
+
+    if (role != 1) {
+        return (
+            <MainCard title="Quản lý hồ sơ" secondary={<Button onClick={() => setOpenDialog(true)}>Đổi mật khẩu</Button>}>
+                <Formik
+                    enableReinitialize={true}
+                    initialValues={{
+                        email: user.email,
+                        full_name: user.full_name || ''
+                    }}
+                    validationSchema={Yup.object().shape({
+                        full_name: Yup.string().max(255, 'Tên quá dài').required('Bắt buộc')
+                    })}
+                    onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+                        try {
+                            setStatus({ success: false });
+                            setSubmitting(false);
+
+                            const new_values = values;
+                            delete new_values.email;
+                            await axiosInstance.put('profile/change', new_values).then((res) => {
+                                setUser(res.data.data);
+
+                                dispatch(
+                                    openSnackBar({
+                                        message: res.data.message,
+                                        status: 'success'
+                                    })
+                                );
+                            });
+                        } catch (err) {
+                            setStatus({ success: false });
+                            setErrors({ submit: err.message });
+                            setSubmitting(false);
+                        }
+                        console.log(values);
+                    }}
+                >
+                    {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                        <form noValidate onSubmit={handleSubmit}>
+                            <Grid container spacing={3} px={30} pt={2}>
+                                <Grid item xs={12}>
+                                    <Stack spacing={1} direction="row" alignItems="center">
+                                        <InputLabel htmlFor="email-login" sx={{ width: '150px' }}>
+                                            Email
+                                        </InputLabel>
+                                        <Typography sx={{ width: '100%' }}>{values.email}</Typography>
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Stack spacing={1} direction="row" alignItems="center">
+                                        <InputLabel htmlFor="full_name" sx={{ width: '150px' }}>
+                                            Họ và tên
+                                        </InputLabel>
+                                        {true ? (
+                                            <TextField
+                                                id="full_name"
+                                                type="text"
+                                                value={values.full_name}
+                                                name="full_name"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                placeholder="Nhập họ và tên"
+                                                fullWidth
+                                                error={Boolean(touched.full_name && errors.full_name)}
+                                                label={touched.full_name && errors.full_name ? errors.full_name : ''}
+                                            />
+                                        ) : (
+                                            <Typography sx={{ width: '100%' }}>{values.full_name}</Typography>
+                                        )}
+                                    </Stack>
+                                </Grid>
+                                {errors.submit && (
+                                    <Grid item xs={12}>
+                                        <FormHelperText error>{errors.submit}</FormHelperText>
+                                    </Grid>
+                                )}
+                                <Grid container mt={3} justifyContent="center">
+                                    <AnimateButton>
+                                        <Button
+                                            disableElevation
+                                            disabled={isSubmitting}
+                                            fullWidth
+                                            size="small"
+                                            type="submit"
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            {true ? 'Sửa thông tin' : 'Xác thực thông tin'}
+                                        </Button>
+                                    </AnimateButton>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    )}
+                </Formik>
+                <CustomDialog
+                    title="Đổi mật khẩu"
+                    width="xs"
+                    bodyComponent={<ChangePassword close={() => setOpenDialog(false)} />}
+                    open={openDialog}
+                    onClose={() => setOpenDialog(false)}
+                />
+            </MainCard>
+        );
+    }
 
     return (
         <MainCard
@@ -121,7 +229,7 @@ const AccountProfile = () => {
                                     <InputLabel htmlFor="full_name" sx={{ width: '150px' }}>
                                         Họ và tên
                                     </InputLabel>
-                                    {true ? (
+                                    {!user?.is_valid ? (
                                         <TextField
                                             id="full_name"
                                             type="text"
@@ -145,7 +253,7 @@ const AccountProfile = () => {
                                     <InputLabel htmlFor="mssv" sx={{ width: '150px' }}>
                                         Mã số sinh viên
                                     </InputLabel>
-                                    {true ? (
+                                    {!user?.is_valid ? (
                                         <TextField
                                             id="mssv"
                                             type="text"
@@ -168,7 +276,7 @@ const AccountProfile = () => {
                                     <InputLabel htmlFor="batch" sx={{ width: '150px' }}>
                                         Khóa học
                                     </InputLabel>
-                                    {true ? (
+                                    {!user?.is_valid ? (
                                         <TextField
                                             id="batch"
                                             select

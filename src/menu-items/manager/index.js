@@ -1,11 +1,12 @@
 // assets
 import { BlockOutlined } from '@ant-design/icons';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, DashboardOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
     BlockOutlined,
-    UserOutlined
+    UserOutlined,
+    DashboardOutlined
 };
 
 const manager = {
@@ -13,6 +14,14 @@ const manager = {
     title: '',
     type: 'group',
     children: [
+        {
+            id: 'dashboard',
+            title: 'Hồ sơ',
+            type: 'item',
+            url: '/dashboard',
+            icon: icons.DashboardOutlined,
+            breadcrumbs: false
+        },
         {
             id: 'student-manager',
             title: 'Danh sách phòng',
@@ -28,6 +37,13 @@ const manager = {
             url: '/student-manager',
             icon: icons.UserOutlined,
             breadcrumbs: false
+        },
+        {
+            id: 'account-info',
+            title: 'Sửa hồ sơ',
+            type: 'item',
+            url: '/profile',
+            icon: icons.UserOutlined
         }
     ]
 };

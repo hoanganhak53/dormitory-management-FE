@@ -13,7 +13,7 @@ const ChangeAvatar = ({ close }) => {
     const storage = getStorage();
 
     const submitContent = () => {
-        const img_name = image.name + new Date().getTime();
+        const img_name = new Date().getTime() + image.name;
         const storageRef = ref(storage, img_name);
         uploadBytes(storageRef, image).then((snapshot) => {
             getDownloadURL(ref(storage, img_name)).then(async (url) => {

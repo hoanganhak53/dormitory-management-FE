@@ -31,7 +31,7 @@ const OverviewCard = ({ color, title, count, des, bgColor }) => (
 OverviewCard.propTypes = {
     color: PropTypes.string,
     title: PropTypes.string,
-    count: PropTypes.string,
+    count: PropTypes.number,
     des: PropTypes.string,
     bgColor: PropTypes.string
 };

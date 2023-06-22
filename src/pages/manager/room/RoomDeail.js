@@ -5,38 +5,74 @@ import { Chip } from '@mui/material/index';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import CustomDialog from 'components/CustomDialog';
 import AddStudent from './AddStudent';
+import { axiosInstance } from 'utils/auth-header';
+import { formatMajor } from 'utils/fomat';
+import { useDispatch } from '../../../../node_modules/react-redux/es/exports';
+import { openSnackBar } from 'store/reducers/menu';
 
-const RoomDetail = ({ viewDetail }) => {
+const RoomDetail = ({ viewDetail, apartment, room }) => {
     const [openDialog, setOpenDialog] = React.useState(false);
+    const [students, setStudents] = React.useState([]);
+    const dispatch = useDispatch();
+    const [refresh, setRefresh] = React.useState(false);
 
-    const generateData = (count) => {
-        const data = [];
-        for (let i = 1; i <= count; i++) {
-            data.push({
-                id: i,
-                column1: `Nguyễn Duy Hoàng Anh ${i}`,
-                column2: `${i}/10/2001`,
-                column3: `2019${i % 10}123`,
-                column4: `Khoa học máy tính`,
-                column5: `092341232${i % 10}`
+    React.useEffect(() => {
+        const init = async () => {
+            try {
+                await axiosInstance.get(`room/detail/${room.id}`).then((res) => {
+                    setStudents(res.data.data);
+                });
+            } catch (err) {}
+        };
+
+        return init;
+    }, [openDialog, refresh]);
+
+    const removeStudent = async (e) => {
+        try {
+            const body = {
+                user_id: e.id,
+                room_id: e.room_id
+            };
+            await axiosInstance.post(`student/remove_to_room`, body).then((res) => {
+                dispatch(
+                    openSnackBar({
+                        message: res.data?.message,
+                        status: 'success'
+                    })
+                );
+                setRefresh(!refresh);
             });
+        } catch (err) {
+            console.error(err);
         }
-        return data;
     };
-    const data = generateData(10);
+
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'column1', headerName: 'Họ và tên', width: 350 },
-        { field: 'column2', headerName: 'Ngày sinh', width: 120 },
-        { field: 'column3', headerName: 'Mã số sinh viên', width: 120 },
-        { field: 'column4', headerName: 'Ngành', width: 200 },
-        { field: 'column5', headerName: 'Số điện thoại', width: 10 },
+        { field: 'full_name', headerName: 'Họ và tên', width: 200 },
+        { field: 'email', headerName: 'Email', width: 200 },
+        { field: 'birth', headerName: 'Ngày sinh', width: 120 },
+        { field: 'mssv', headerName: 'Mã số sinh viên', width: 120 },
+        { field: 'batch', headerName: 'Khoá', width: 70 },
+        {
+            field: 'action',
+            headerName: 'Ngành',
+            width: 200,
+            renderCell: (row) => {
+                return formatMajor(row.major);
+            }
+        },
+        { field: 'phonenumber', headerName: 'Số điện thoại', width: 110 },
         {
             field: 'action',
             headerName: '',
             width: 100,
-            renderCell: () => {
-                return <Button color="error">Xóa</Button>;
+            renderCell: (row) => {
+                return (
+                    <Button color="error" onClick={() => removeStudent(row)}>
+                        Xóa
+                    </Button>
+                );
             }
         }
     ];
@@ -47,18 +83,24 @@ const RoomDetail = ({ viewDetail }) => {
                     <IconButton onClick={() => viewDetail(0, {})} sx={{ marginRight: '5px' }}>
                         <ArrowLeftOutlined />
                     </IconButton>
-                    <Typography variant="h5">Đăng ký các kỳ</Typography>
-                    <Chip label="B3/202" color="success" sx={{ marginLeft: '10px' }} />
+                    <Typography variant="h5">Phòng 202 - {apartment.apartment_name}</Typography>
                 </Grid>
                 <Grid item>
                     <Button onClick={() => setOpenDialog(true)}>Thêm sinh viên</Button>
                 </Grid>
             </Grid>
-            <TableComponent columns={columns} data={data} />;
+            <TableComponent columns={columns} data={students} />
             <CustomDialog
                 title="Thêm sinh viên"
                 width="sm"
-                bodyComponent={<AddStudent></AddStudent>}
+                bodyComponent={
+                    <AddStudent
+                        apartment_id={apartment.id}
+                        room_type_id={room.room_type_id}
+                        room_id={room.id}
+                        close={() => setOpenDialog(false)}
+                    ></AddStudent>
+                }
                 open={openDialog}
                 onClose={() => setOpenDialog(false)}
             />

@@ -3,7 +3,7 @@ import { AuditOutlined } from '@ant-design/icons';
 import { TeamOutlined } from '@ant-design/icons';
 import { ApartmentOutlined } from '@ant-design/icons';
 import { ContainerOutlined } from '@ant-design/icons';
-import { HourglassOutlined } from '@ant-design/icons';
+import { HourglassOutlined, UserOutlined, DashboardOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
@@ -11,7 +11,9 @@ const icons = {
     ApartmentOutlined,
     TeamOutlined,
     ContainerOutlined,
-    HourglassOutlined
+    HourglassOutlined,
+    UserOutlined,
+    DashboardOutlined
 };
 
 const admin = {
@@ -19,6 +21,14 @@ const admin = {
     title: '',
     type: 'group',
     children: [
+        {
+            id: 'dashboard',
+            title: 'Hồ sơ',
+            type: 'item',
+            url: '/dashboard',
+            icon: icons.DashboardOutlined,
+            breadcrumbs: false
+        },
         {
             id: 'student',
             title: 'Quản lý sinh viên',
@@ -58,6 +68,13 @@ const admin = {
             url: '/post',
             icon: icons.ContainerOutlined,
             breadcrumbs: false
+        },
+        {
+            id: 'account-info',
+            title: 'Sửa hồ sơ',
+            type: 'item',
+            url: '/profile',
+            icon: icons.UserOutlined
         }
     ]
 };

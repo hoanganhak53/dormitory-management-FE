@@ -28,7 +28,7 @@ const CreatePost = ({ old_post = {}, close }) => {
         data.content = content.toString();
 
         if (image) {
-            const img_name = image.name + new Date().getTime();
+            const img_name = new Date().getTime() + image.name;
             const storageRef = await ref(storage, img_name);
             await uploadBytes(storageRef, image).then(async (snapshot) => {
                 await getDownloadURL(ref(storage, img_name)).then((url) => {

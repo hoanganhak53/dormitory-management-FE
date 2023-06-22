@@ -28,3 +28,11 @@ export const formatTime = (str) => {
 
     return newTimeStr;
 };
+
+export const formatTimeDate = (str) => {
+    if (!str) return 'NA';
+    const momentObj = moment(str);
+    const newTimeStr = momentObj.format('DD/MM/YYYY');
+
+    return newTimeStr;
+};

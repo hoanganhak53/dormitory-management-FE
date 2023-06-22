@@ -61,7 +61,7 @@ const RegistrationSemester = () => {
                         break;
                     case 2:
                         label = 'Đã nộp tiền';
-                        color = 'success';
+                        color = 'info';
                         break;
                     case 3:
                         label = 'Đã sắp xếp';

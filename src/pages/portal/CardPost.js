@@ -18,10 +18,10 @@ const CardPost = ({ post = {} }) => {
             <CardActionArea>
                 <CardMedia component="img" height="230" image={post.image} alt="post_img" />
                 <CardContent sx={{ pb: '0px' }}>
-                    <Typography gutterBottom variant="h4" component="div">
+                    <Typography gutterBottom variant="h4" component="div" sx={{ overflow: 'hidden', maxHeight: '3.3rem' }}>
                         {post.title}
                     </Typography>
-                    <div style={{ overflow: 'hidden', maxHeight: '8rem' }}>
+                    <div style={{ overflow: 'hidden', maxHeight: '8.5rem' }}>
                         <Typography variant="h6" color="text.secondary" sx={{ textOverflow: 'ellipsis' }}>
                             {stripHtml(post.content)}
                         </Typography>

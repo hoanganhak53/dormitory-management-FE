@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from 'utils/auth-header';
 import avatar from 'assets/images/default_avatar.jpg';
-import { formatGender, formatMajor } from 'utils/fomat';
+import { formatGender, formatMajor, formatTimeDate } from 'utils/fomat';
 
 export const StudentAvatar = styled('img')(() => ({
     borderRadius: '5px',
@@ -76,19 +76,21 @@ const StudentInfo = () => {
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Phòng:</Typography>
-                        <Typography>211</Typography>
+                        <Typography>{user.room_name || 'NA'}</Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Tòa nhà:</Typography>
-                        <Typography>B3</Typography>
+                        <Typography>{user.apartment_name || 'NA'}</Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Kỳ đăng ký:</Typography>
-                        <Typography>20222</Typography>
+                        <Typography>{user?.registration?.semester || 'NA'}</Typography>
                     </Stack>
                     <Stack direction="row" mb={2}>
                         <Typography sx={{ fontWeight: '600', mr: '25px' }}>Thời gian:</Typography>
-                        <Typography>30/3/2023 - 20/8/2023</Typography>
+                        <Typography>
+                            {formatTimeDate(user?.registration?.start_date)} - {formatTimeDate(user?.registration?.end_date)}
+                        </Typography>
                     </Stack>
                 </Grid>
             </Grid>

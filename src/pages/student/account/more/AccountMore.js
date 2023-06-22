@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux/es/exports';
 import { openSnackBar } from 'store/reducers/menu';
 
 export const AccountMore = () => {
+    const user = localStorage.getItem('user');
     const [form, setForm] = useState([]);
     const [answers, setAnswers] = useState({});
     const dispatch = useDispatch();
@@ -103,8 +104,8 @@ export const AccountMore = () => {
             <Grid container rowSpacing={2.5} columnSpacing={2.75} alignItems="center" justifyContent="center">
                 <Grid item xs={12}>
                     <Typography variant="h5">Sửa thông tin bổ sung</Typography>
-                    <Typography variant="h6" color={true ? 'error' : 'success'}>
-                        {true ? 'Chưa xác thực' : 'Đã xác thực'}
+                    <Typography variant="h6" color={user.is_more_info ? 'error' : 'success.main'}>
+                        {user.is_more_info ? 'Chưa hoàn tất' : 'Đã hoàn tất'}
                     </Typography>
                 </Grid>
                 {form.map((e, index) => (

@@ -15,11 +15,13 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom/dist/index';
 import { axiosInstance } from 'utils/auth-header';
+import { useDispatch } from '../../../../node_modules/react-redux/es/exports';
+import { openSnackBar } from 'store/reducers/menu';
 
 const AuthLogin = () => {
     const [showPassword, setShowPassword] = React.useState(false);
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -65,6 +67,12 @@ const AuthLogin = () => {
                         setStatus({ success: false });
                         setErrors({ submit: err?.response?.data?.detail });
                         setSubmitting(false);
+                        dispatch(
+                            openSnackBar({
+                                message: res.data.message,
+                                status: 'error'
+                            })
+                        );
                     }
                 }}
             >

@@ -1,31 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material/index';
 import RoomCard from './RoomCard';
 import RoomDetail from './RoomDeail';
-
-const generateData = (count) => {
-    const data = [];
-    for (let i = 1; i <= count; i++) {
-        data.push({
-            id: i,
-            room_number: `20${i}`,
-            room_type_name: `Phòng 8 nữ full`,
-            room_price: `600,000VND`,
-            capacity: `8`,
-            gender: `Nữ`,
-            total: `3`
-        });
-    }
-    return data;
-};
+import { axiosInstance } from 'utils/auth-header';
+import CustomDialog from 'components/CustomDialog';
+import Distribute from './Distribute';
+import { useDispatch } from '../../../../node_modules/react-redux/es/exports';
+import { openSnackBar } from 'store/reducers/menu';
 
 const RoomList = () => {
-    const [openDialog, setOpenDialog] = React.useState(false);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const apartment_id = user.apartment_id;
+    const [room_type_unique, setRoomTypeUnique] = useState([]);
     const [value, setValue] = React.useState(0);
     const [page, setPage] = React.useState(0);
     const [room, setRoom] = React.useState({});
     const [selected, setSelected] = React.useState([]);
-    const [data, setData] = React.useState(generateData(9));
+    const [apartment, setApartment] = React.useState({});
+    const [rooms, setRooms] = React.useState([]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [distributeValue, setDistributeValue] = React.useState([]);
+    const [distributeStatistic, setDistributeStatistic] = React.useState([]);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        setSelected([]);
+        const init = async () => {
+            try {
+                await axiosInstance.get(`apartment/${apartment_id}`).then((res) => {
+                    setApartment(res.data.data);
+                    setRooms(res.data.rooms);
+                    setRoomTypeUnique([...new Set(res.data.rooms.map((item) => item.room_type.room_type_name))]);
+                });
+            } catch (err) {}
+        };
+
+        return init;
+    }, [page]);
 
     const viewDetail = (page, roomDetail) => {
         setRoom(roomDetail);
@@ -46,43 +58,78 @@ const RoomList = () => {
         }
     };
 
+    const distribute = async () => {
+        setOpenDialog(true);
+        try {
+            await axiosInstance.post('room/distribute', selected).then(async (res) => {
+                setDistributeValue(res.data.data);
+                setDistributeStatistic(res.data.statistic);
+                setOpenDialog(true);
+            });
+        } catch (err) {
+            dispatch(
+                openSnackBar({
+                    message: 'Dồn phòng bị lỗi, hãy thử lại sau',
+                    status: 'error'
+                })
+            );
+        }
+    };
+
     if (page) {
-        return <RoomDetail viewDetail={viewDetail}></RoomDetail>;
+        return <RoomDetail viewDetail={viewDetail} apartment={apartment} room={room}></RoomDetail>;
     }
 
     return (
         <Grid>
             <Grid container alignItems="center" justifyContent="space-between" mb={2}>
                 <Grid item>
-                    <Typography variant="h5">Danh sách phòng - B3</Typography>
+                    <Typography variant="h5">Danh sách phòng - {apartment?.apartment_name}</Typography>
                 </Grid>
                 <Grid item>
-                    <TextField select value={value} sx={{ width: '140px' }} onChange={(e) => setValue(e.target.value)}>
-                        <MenuItem value={0}>Tất cả</MenuItem>
-                        <MenuItem value="Phòng 8 nữ full">Phòng 8 nữ full</MenuItem>
-                        <MenuItem value="Phòng 4 nữ full">Phòng 4 nữ full</MenuItem>
-                        <MenuItem value="Phòng 10 nam B3">Phòng 10 nam B3</MenuItem>
-                    </TextField>
                     {value !== 0 && (
                         <>
-                            <Button onClick={() => console.log(selected)}>Dồn phòng</Button>
+                            <Button onClick={distribute}>Dồn phòng</Button>
                         </>
                     )}
+                    <TextField
+                        select
+                        value={value}
+                        sx={{ width: '140px' }}
+                        onChange={(e) => {
+                            setValue(e.target.value);
+                            setSelected([]);
+                        }}
+                    >
+                        <MenuItem value={0}>Tất cả</MenuItem>
+                        {room_type_unique.map((e) => (
+                            <MenuItem value={e} key={e}>
+                                {e}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </Grid>
             </Grid>
             <Grid container rowSpacing={3} columnSpacing={3}>
-                {data
+                {rooms
                     .filter((e) => {
                         if (value == 0) {
                             return true;
                         } else {
-                            return e.room_type_name == value;
+                            return e?.room_type?.room_type_name == value;
                         }
                     })
                     .map((e) => (
-                        <RoomCard key={e.id} viewDetail={viewDetail} room={e} selectRoom={selectRoom} />
+                        <RoomCard key={e.id} viewDetail={viewDetail} room={e} selectRoom={selectRoom} filter={value} />
                     ))}
             </Grid>
+            <CustomDialog
+                title="Dồn phòng"
+                width="sm"
+                bodyComponent={<Distribute result={distributeValue} statistic={distributeStatistic} close={() => setOpenDialog(false)} />}
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+            />
         </Grid>
     );
 };

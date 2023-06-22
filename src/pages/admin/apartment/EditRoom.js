@@ -18,6 +18,23 @@ const EditRoom = ({ room = {}, apartments, room_types, close }) => {
         data.apartment_id = apartment.id;
         data.room_type_id = room_type.id;
 
+        if (
+            !data.room_name ||
+            !data.room_type_id ||
+            !data.apartment_id ||
+            !room_type.gender ||
+            !room_type.room_price ||
+            !room_type.capacity
+        ) {
+            dispatch(
+                openSnackBar({
+                    message: 'Hãy điền đầy đủ thông tin',
+                    status: 'error'
+                })
+            );
+            return;
+        }
+
         try {
             await axiosInstance.put('room_type', room_type).then(async (res) => {
                 console.log(res.data);

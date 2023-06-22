@@ -27,7 +27,7 @@ export const Posts = () => {
             </Grid>
             <Grid container rowSpacing={4.5} columnSpacing={2.75} justifyContent="center" mb={7}>
                 {postList.slice(0, 3).map((e) => (
-                    <Grid item xs={12} md={6} lg={3} justifyContent="center">
+                    <Grid key={e.id} item xs={12} md={6} lg={3} justifyContent="center">
                         <CardPost post={e} />
                     </Grid>
                 ))}

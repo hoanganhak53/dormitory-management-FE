@@ -86,7 +86,7 @@ const AuthRegister = () => {
                         dispatch(
                             openSnackBar({
                                 message: res.data.message,
-                                status: 'success'
+                                status: 'error'
                             })
                         );
                     }

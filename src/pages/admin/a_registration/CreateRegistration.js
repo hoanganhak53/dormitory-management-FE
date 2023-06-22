@@ -41,6 +41,28 @@ const CreateRegistration = ({ registration_old = {}, close }) => {
         }
     };
 
+    const remove = async () => {
+        try {
+            await axiosInstance.delete(`registration/${registration.id}`).then(async (res) => {
+                dispatch(
+                    openSnackBar({
+                        message: res.data.message,
+                        status: 'success'
+                    })
+                );
+            });
+
+            close();
+        } catch (err) {
+            dispatch(
+                openSnackBar({
+                    message: err?.response?.data?.detail,
+                    status: 'error'
+                })
+            );
+        }
+    };
+
     return (
         <Grid container>
             <Grid container justifyContent="space-between">
@@ -159,6 +181,12 @@ const CreateRegistration = ({ registration_old = {}, close }) => {
                 <Grid item xs={3.6}></Grid>
             </Grid>
             <Grid container justifyContent="end">
+                {registration_old.id && (
+                    <Button color="error" onClick={remove}>
+                        Xóa
+                    </Button>
+                )}
+
                 <Button onClick={submit}>{registration_old.id ? 'Sửa' : 'Tạo'}</Button>
             </Grid>
         </Grid>
