@@ -11,6 +11,7 @@ const TitlePostTypography = styled(Typography)`
 
 export const PostSidebar = ({ posts = [] }) => {
     const navigate = useNavigate();
+    const reverse = [...posts];
     return (
         <Grid container pl={8}>
             <Grid item mb={2}>
@@ -18,19 +19,22 @@ export const PostSidebar = ({ posts = [] }) => {
                     Bài viết mới
                 </Typography>
             </Grid>
-            {posts.slice(0, 6).map((e) => (
-                <Grid item mb={3} key={e.id}>
-                    <TitlePostTypography
-                        onClick={() => {
-                            navigate(`/portal/post/${e.id}`);
-                            window.location.reload();
-                        }}
-                        variant="h5"
-                    >
-                        {e.title}
-                    </TitlePostTypography>
-                </Grid>
-            ))}
+            {reverse
+                .reverse()
+                .slice(0, 6)
+                .map((e) => (
+                    <Grid item mb={3} key={e.id}>
+                        <TitlePostTypography
+                            onClick={() => {
+                                navigate(`/portal/post/${e.id}`);
+                                window.location.reload();
+                            }}
+                            variant="h5"
+                        >
+                            {e.title}
+                        </TitlePostTypography>
+                    </Grid>
+                ))}
         </Grid>
     );
 };

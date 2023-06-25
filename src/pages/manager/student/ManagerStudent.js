@@ -8,14 +8,19 @@ import { formatGender, formatMajor } from 'utils/fomat';
 import { IconButton } from '../../../../node_modules/@mui/material/index';
 import { EditOutlined } from '@ant-design/icons';
 import EditStatus from './EditStatus';
+import { openSnackBar } from 'store/reducers/menu';
+import { useDispatch } from '../../../../node_modules/react-redux/es/exports';
+import Arrange from './Arrange';
 
 const ManagerStudent = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     const apartment_id = user.apartment_id;
     const [openDialog, setOpenDialog] = React.useState(false);
     const [value, setValue] = React.useState(0);
+    const [value_room_type, setValueRoomType] = React.useState('all');
     const [registrations, setRegistrations] = React.useState([]);
     const [apartment, setApartment] = React.useState({});
+    const [room_type_unique, setRoomTypeUnique] = React.useState([]);
     const [dialogConent, setDialogContent] = React.useState({
         title: '',
         bodyComponent: <></>,
@@ -28,6 +33,7 @@ const ManagerStudent = () => {
                 await axiosInstance.get(`apartment/registration/${apartment_id}`).then((res) => {
                     setRegistrations(res.data.data);
                     setApartment(res.data.apartment);
+                    setRoomTypeUnique([...new Set(res.data.data.map((item) => item.room_type_name))]);
                 });
             } catch (err) {}
         };
@@ -36,13 +42,13 @@ const ManagerStudent = () => {
     }, [openDialog]);
 
     const columns = [
-        { field: 'full_name', headerName: 'Họ và tên', width: 200 },
+        { field: 'full_name', headerName: 'Họ và tên', width: 180 },
         { field: 'mssv', headerName: 'MSSV', width: 60 },
         { field: 'batch', headerName: 'Khóa', width: 50 },
         {
             field: 'action',
             headerName: 'Ngành',
-            width: 200,
+            width: 180,
             renderCell: (row) => {
                 return formatMajor(row.major);
             }
@@ -55,6 +61,7 @@ const ManagerStudent = () => {
                 return formatGender(row.gender);
             }
         },
+        { field: 'room_type_name', headerName: 'Loại phòng', width: 120 },
         { field: 'room_name', headerName: 'Phòng', width: 80 },
         { field: 'registration_name', headerName: 'Đợt đăng ký', width: 200 },
         {
@@ -124,6 +131,28 @@ const ManagerStudent = () => {
                     <Typography variant="h5">Danh sách đăng ký - {apartment.apartment_name}</Typography>
                 </Grid>
                 <Grid item>
+                    {value_room_type != 'all' && (
+                        <Button
+                            onClick={() => {
+                                setDialogContent({
+                                    title: 'Xác nhận',
+                                    width: 'xs',
+                                    bodyComponent: (
+                                        <Confirmation
+                                            setOpenDialog={setOpenDialog}
+                                            apartment_id={apartment_id}
+                                            room_type_name={value_room_type}
+                                            setDialogContent={setDialogContent}
+                                        ></Confirmation>
+                                    )
+                                });
+                                setOpenDialog(true);
+                            }}
+                            sx={{ marginLeft: '8px' }}
+                        >
+                            Sắp xếp
+                        </Button>
+                    )}
                     <TextField select value={value} sx={{ width: '120px' }} onChange={(e) => setValue(e.target.value)}>
                         <MenuItem value={0}>Tất cả</MenuItem>
                         <MenuItem value={1}>Đã đăng ký</MenuItem>
@@ -131,27 +160,34 @@ const ManagerStudent = () => {
                         <MenuItem value={3}>Đã sắp xếp</MenuItem>
                         <MenuItem value={4}>Đã hủy</MenuItem>
                     </TextField>
-                    <Button
-                        onClick={() => {
-                            setDialogContent({
-                                title: 'Xác nhận',
-                                width: 'xs',
-                                bodyComponent: <Confirmation setOpenDialog={setOpenDialog}></Confirmation>
-                            });
-                            setOpenDialog(true);
+                    <TextField
+                        select
+                        value={value_room_type}
+                        sx={{ width: '140px', marginLeft: '10px' }}
+                        onChange={(e) => {
+                            setValueRoomType(e.target.value);
                         }}
-                        sx={{ marginLeft: '8px' }}
                     >
-                        Sắp xếp
-                    </Button>
+                        <MenuItem value={'all'}>Tất cả</MenuItem>
+                        {room_type_unique.map((e) => (
+                            <MenuItem value={e} key={e}>
+                                {e}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </Grid>
             </Grid>
             <TableComponent
                 columns={columns}
-                data={registrations.filter((e) => {
-                    if (value == 0) return true;
-                    return e.status == value;
-                })}
+                data={registrations
+                    .filter((e) => {
+                        if (value == 0) return true;
+                        return e.status == value;
+                    })
+                    .filter((e) => {
+                        if (value_room_type == 'all') return true;
+                        return e.room_type_name == value_room_type;
+                    })}
             />
             <CustomDialog
                 title={dialogConent.title}
@@ -166,19 +202,43 @@ const ManagerStudent = () => {
 
 export default ManagerStudent;
 
-const Confirmation = ({ setOpenDialog }) => {
+const Confirmation = ({ setOpenDialog, room_type_name, apartment_id, setDialogContent }) => {
+    const dispatch = useDispatch();
+
+    const submit = async () => {
+        try {
+            const data = {
+                room_type_name,
+                apartment_id
+            };
+            await axiosInstance.post('apartment/cluster', data).then(async (res) => {
+                setDialogContent({
+                    title: 'Sắp xếp sinh viên',
+                    bodyComponent: <Arrange result={res.data.data} close={() => setOpenDialog(false)} statistic={res.data.statistic} />,
+                    width: 'md'
+                });
+            });
+        } catch (err) {
+            dispatch(
+                openSnackBar({
+                    message: 'Sắp xếp bị lỗi, hãy thử lại sau',
+                    status: 'error'
+                })
+            );
+        }
+    };
     return (
         <Grid>
             <Grid container mb={2}>
                 <Typography variant="h5">Bạn có muốn sắp xếp sinh viên không?</Typography>
-                <Typography>Chú ý chỉ sắp xếp các sinh viên chưa có đã nộp tiền vào các phòng trống.</Typography>
+                <Typography>Chú ý chỉ sắp xếp các sinh viên đã đăng ký loại phòng hiện tại và đã nộp tiền.</Typography>
             </Grid>
             <Divider />
             <Grid container mt={1.5} justifyContent="end">
                 <Button variant="outlined" size="small" onClick={() => setOpenDialog(false)}>
                     Hủy bỏ
                 </Button>
-                <Button variant="contained" size="small" sx={{ marginLeft: '5px' }}>
+                <Button onClick={submit} variant="contained" size="small" sx={{ marginLeft: '5px' }}>
                     Sắp xếp
                 </Button>
             </Grid>
