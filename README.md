@@ -9,7 +9,7 @@ Follow the steps below to install and run the Dormitory Management frontend proj
 1. Clone the repository:
 
    ```shell
-   git clone <repository-url>
+   git clone [<repository-url>](https://github.com/hoanganhak53/KTX-BK-FE.git)
 
 2. Navigate to the project directory:
    ```shell
