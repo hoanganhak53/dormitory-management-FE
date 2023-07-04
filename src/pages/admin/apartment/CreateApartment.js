@@ -28,6 +28,16 @@ const CreateApartment = ({ apartment = {}, close }) => {
         data.apartment_name = apartment_name;
         data.manager_id = target.id;
 
+        if (!data.apartment_name || !data.manager_id) {
+            dispatch(
+                openSnackBar({
+                    message: 'Hãy điền đầy đủ thông tin',
+                    status: 'error'
+                })
+            );
+            return;
+        }
+
         try {
             if (data.id != null) {
                 await axiosInstance.put('apartment', data).then(async (res) => {

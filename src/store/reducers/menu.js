@@ -11,7 +11,8 @@ const initialState = {
         status: 'success',
         message: 'This is the message',
         open: false
-    }
+    },
+    search: ''
 };
 
 // ==============================|| SLICE - MENU ||============================== //
@@ -42,10 +43,14 @@ const menu = createSlice({
 
         closeSnackBar(state) {
             state.snackBar.open = false;
+        },
+
+        searching(state, action) {
+            state.search = action.payload.search;
         }
     }
 });
 
 export default menu.reducer;
 
-export const { activeItem, activeComponent, openDrawer, openComponentDrawer, openSnackBar, closeSnackBar } = menu.actions;
+export const { activeItem, activeComponent, openDrawer, openComponentDrawer, openSnackBar, closeSnackBar, searching } = menu.actions;

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 
 // project import
-import FirebaseRegister from './auth-forms/AuthRegister';
+import AuthRegister from './auth-forms/AuthRegister';
 import AuthWrapper from './AuthWrapper';
 
 // ================================|| REGISTER ||================================ //
@@ -21,7 +21,7 @@ const Register = () => (
                 </Stack>
             </Grid>
             <Grid item xs={12}>
-                <FirebaseRegister />
+                <AuthRegister />
             </Grid>
         </Grid>
     </AuthWrapper>

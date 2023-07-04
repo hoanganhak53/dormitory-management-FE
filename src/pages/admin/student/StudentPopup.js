@@ -110,7 +110,7 @@ const StudentPopup = ({ user, close }) => {
                 </Stack>
             </Grid>
             <Grid container justifyContent="end">
-                <Button onClick={submit}>Hủy xác thực</Button>
+                <Button onClick={submit}>{student.is_valid ? 'Hủy xác thực' : 'Xác thực'}</Button>
             </Grid>
         </Grid>
     );

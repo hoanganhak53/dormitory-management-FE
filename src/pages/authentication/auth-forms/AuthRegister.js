@@ -105,7 +105,7 @@ const AuthRegister = () => {
                                         name="full_name"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="Hoàng Anh"
+                                        placeholder="Tên của bạn"
                                         fullWidth
                                         error={Boolean(touched.full_name && errors.full_name)}
                                     />
@@ -128,7 +128,7 @@ const AuthRegister = () => {
                                         name="email"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="anh.ndh22xxx@sis.hust.edu.vn"
+                                        placeholder="abc.xyz220000@sis.hust.edu.vn"
                                         inputProps={{}}
                                     />
                                     {touched.email && errors.email && (
@@ -148,7 +148,7 @@ const AuthRegister = () => {
                                         name="mssv"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="20190000"
+                                        placeholder="20220000"
                                         fullWidth
                                         error={Boolean(touched.mssv && errors.mssv)}
                                     />

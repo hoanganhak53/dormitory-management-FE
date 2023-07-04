@@ -45,16 +45,16 @@ const CreateQA = ({ setOpenDialog, QA = {} }) => {
     };
 
     const addAnwsers = (event) => {
-        if (answers.length >= 8) {
-            dispatch(
-                openSnackBar({
-                    message: 'Một câu hỏi có tối đa 8 câu trả lời',
-                    status: 'error'
-                })
-            );
-            return;
-        }
         if (event.key == 'Enter' && event.target.value != '') {
+            if (answers.length >= 8) {
+                dispatch(
+                    openSnackBar({
+                        message: 'Một câu hỏi có tối đa 8 câu trả lời',
+                        status: 'error'
+                    })
+                );
+                return;
+            }
             setAnwsers((prev) => [...prev, event.target.value]);
             event.target.value = ``;
         }

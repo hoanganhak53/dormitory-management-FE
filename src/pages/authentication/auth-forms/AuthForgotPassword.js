@@ -1,8 +1,7 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useState } from 'react';
 
 // material-ui
-import { Button, FormHelperText, Grid, Link, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material';
+import { Button, FormHelperText, Grid, InputLabel, OutlinedInput, Stack } from '@mui/material';
 
 // third party
 import * as Yup from 'yup';
@@ -12,38 +11,25 @@ import { Formik } from 'formik';
 import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom/dist/index';
 import { axiosInstance } from 'utils/auth-header';
-import { useDispatch } from '../../../../node_modules/react-redux/es/exports';
+import { useDispatch } from 'react-redux';
 import { openSnackBar } from 'store/reducers/menu';
+import emailjs from '@emailjs/browser';
 
-const AuthLogin = () => {
-    const [showPassword, setShowPassword] = React.useState(false);
-    const navigate = useNavigate();
+const AuthForgotPassword = () => {
     const dispatch = useDispatch();
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
 
     return (
         <>
             <Formik
                 initialValues={{
                     email: '',
-                    password: '',
+                    mssv: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
                     email: Yup.string().email('Email không đúng định dạng').max(255).required('Email là trường bắt buộc'),
-                    password: Yup.string()
-                        .max(20, 'Mật khẩu tối đa 20 ký tự')
-                        .required('Mật khẩu là trường bắt buộc')
-                        .min(6, 'Mật khẩu dài ít nhất 6 ký tự')
+                    mssv: Yup.string().required('Mã số sinh viên là trường bắt buộc')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
@@ -51,21 +37,31 @@ const AuthLogin = () => {
                         setSubmitting(false);
 
                         await axiosInstance
-                            .post('auth/login', {
+                            .post('auth/reset_password', {
                                 email: values.email,
-                                password: values.password
+                                mssv: values.mssv
                             })
                             .then((res) => {
-                                localStorage.setItem('user', JSON.stringify(res.data.data));
-                                localStorage.setItem('token', JSON.stringify(res.data.token));
-                                localStorage.setItem('role', JSON.stringify(res.data.data.user_type));
-                                navigate('/');
-                                window.location.reload();
+                                dispatch(
+                                    openSnackBar({
+                                        message: res.data.message,
+                                        status: 'success'
+                                    })
+                                );
+                                emailjs.send(
+                                    'service_iff86u8',
+                                    'template_191dgr5',
+                                    {
+                                        password: res.data.new_password,
+                                        user_email: values.email
+                                    },
+                                    '_vKOEWbKlu7mvZPiO'
+                                );
                             });
                     } catch (err) {
                         console.error(err);
                         setStatus({ success: false });
-                        setErrors({ submit: err?.response?.data?.detail });
+                        setErrors({ submit: 'Không gửi được email, hãy thử lại sau' });
                         setSubmitting(false);
                         dispatch(
                             openSnackBar({
@@ -81,20 +77,21 @@ const AuthLogin = () => {
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <Stack spacing={1}>
-                                    <InputLabel htmlFor="email-login">Email</InputLabel>
+                                    <InputLabel htmlFor="email-signup">Email*</InputLabel>
                                     <OutlinedInput
+                                        fullWidth
+                                        error={Boolean(touched.email && errors.email)}
                                         id="email-login"
                                         type="email"
                                         value={values.email}
                                         name="email"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="Nhập email của bạn"
-                                        fullWidth
-                                        error={Boolean(touched.email && errors.email)}
+                                        placeholder="abc.xyz220000@sis.hust.edu.vn"
+                                        inputProps={{}}
                                     />
                                     {touched.email && errors.email && (
-                                        <FormHelperText error id="standard-weight-helper-text-email-login">
+                                        <FormHelperText error id="helper-text-email-signup">
                                             {errors.email}
                                         </FormHelperText>
                                     )}
@@ -102,43 +99,24 @@ const AuthLogin = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Stack spacing={1}>
-                                    <InputLabel htmlFor="password-login">Mật khẩu</InputLabel>
+                                    <InputLabel htmlFor="mssv-signup">Mã số sinh viên*</InputLabel>
                                     <OutlinedInput
-                                        fullWidth
-                                        error={Boolean(touched.password && errors.password)}
-                                        id="-password-login"
-                                        type={showPassword ? 'text' : 'password'}
-                                        value={values.password}
-                                        name="password"
+                                        id="mssv-login"
+                                        type="text"
+                                        value={values.mssv}
+                                        name="mssv"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                    size="large"
-                                                >
-                                                    {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        placeholder="Nhập mật khẩu"
+                                        placeholder="20220000"
+                                        fullWidth
+                                        error={Boolean(touched.mssv && errors.mssv)}
                                     />
-                                    {touched.password && errors.password && (
-                                        <FormHelperText error id="standard-weight-helper-text-password-login">
-                                            {errors.password}
+                                    {touched.mssv && errors.mssv && (
+                                        <FormHelperText error id="helper-text-mssv-signup">
+                                            {errors.mssv}
                                         </FormHelperText>
                                     )}
                                 </Stack>
-                            </Grid>
-
-                            <Grid item xs={12} sx={{ mt: -1 }}>
-                                <Link variant="h6" component={RouterLink} to="/forgot-password" color="text.primary">
-                                    Quên mật khẩu?
-                                </Link>
                             </Grid>
                             {errors.submit && (
                                 <Grid item xs={12}>
@@ -156,7 +134,7 @@ const AuthLogin = () => {
                                         variant="contained"
                                         color="primary"
                                     >
-                                        Đăng nhập
+                                        Lấy lại mật khẩu
                                     </Button>
                                 </AnimateButton>
                             </Grid>
@@ -168,4 +146,4 @@ const AuthLogin = () => {
     );
 };
 
-export default AuthLogin;
+export default AuthForgotPassword;

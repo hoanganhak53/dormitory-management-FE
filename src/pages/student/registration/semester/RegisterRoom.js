@@ -44,6 +44,15 @@ const RegisterRoom = ({ close }) => {
     }, []);
 
     const submit = async () => {
+        if (result.room_type_id == '' || result.apartment_id == '') {
+            dispatch(
+                openSnackBar({
+                    message: 'Hãy điền đầy đủ thông tin',
+                    status: 'error'
+                })
+            );
+            return;
+        }
         try {
             await axiosInstance.post('student_room', { ...result, registration_id: registration.id }).then(async (res) => {
                 dispatch(

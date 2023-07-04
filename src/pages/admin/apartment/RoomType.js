@@ -9,6 +9,16 @@ const RoomEdit = ({ close }) => {
     const dispatch = useDispatch();
 
     const submit = async () => {
+        if (room_type.room_type_name == '' || !room_type.room_price || !room_type.capacity) {
+            dispatch(
+                openSnackBar({
+                    message: 'Hãy điền đầy đủ thông tin',
+                    status: 'error'
+                })
+            );
+            return;
+        }
+
         try {
             await axiosInstance.post('room_type', room_type).then(async (res) => {
                 dispatch(

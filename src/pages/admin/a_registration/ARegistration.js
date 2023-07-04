@@ -105,7 +105,7 @@ const ARegistration = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <TableComponent columns={columns} data={registrations} />
+            <TableComponent columns={columns} data={registrations} key_search={'registration_name'} />
             <CustomDialog
                 title="Đợt đăng ký"
                 width="sm"

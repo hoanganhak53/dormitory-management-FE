@@ -188,6 +188,7 @@ const ManagerStudent = () => {
                         if (value_room_type == 'all') return true;
                         return e.room_type_name == value_room_type;
                     })}
+                key_search={'full_name'}
             />
             <CustomDialog
                 title={dialogConent.title}

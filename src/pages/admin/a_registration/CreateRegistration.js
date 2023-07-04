@@ -10,6 +10,25 @@ const CreateRegistration = ({ registration_old = {}, close }) => {
     const dispatch = useDispatch();
 
     const submit = async () => {
+        if (
+            registration.registration_name == '' ||
+            !registration.start_date ||
+            !registration.end_date ||
+            !registration.end_date ||
+            !registration.semester ||
+            !registration.start_register ||
+            !registration.end_register ||
+            !registration.paid_date
+        ) {
+            dispatch(
+                openSnackBar({
+                    message: 'Hãy điền đầy đủ thông tin',
+                    status: 'error'
+                })
+            );
+            return;
+        }
+
         try {
             if (registration.id != null) {
                 await axiosInstance.put('registration', registration).then(async (res) => {

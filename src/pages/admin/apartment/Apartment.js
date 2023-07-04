@@ -41,7 +41,9 @@ const Apartment = () => {
 
                 await axiosInstance.get('apartment/list').then(async (res) => {
                     setApartments(res.data.data);
-                    setTarget(res.data.data[0]);
+                    if (target?.apartment_name == '' || target.apartment_name == undefined) {
+                        setTarget(res.data.data[0]);
+                    }
                 });
 
                 await axiosInstance.get(`room/list`).then((res) => {
@@ -239,7 +241,7 @@ const Apartment = () => {
                     </Menu>
                 </Grid>
             </Grid>
-            <TableComponent columns={columns} data={rooms.filter((e) => e.apartment_id == target.id)} />
+            <TableComponent columns={columns} data={rooms.filter((e) => e.apartment_id == target.id)} key_search={'room_name'} />
             <CustomDialog
                 title={dialogConent.title}
                 bodyComponent={dialogConent.bodyComponent}

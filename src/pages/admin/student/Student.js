@@ -91,7 +91,7 @@ const Student = () => {
                     <Typography variant="h5">Danh sách sinh viên</Typography>
                 </Grid>
             </Grid>
-            <TableComponent columns={columns} data={studentList} />
+            <TableComponent columns={columns} data={studentList} key_search={'full_name'} />
             <CustomDialog
                 title="Chi tiết sinh viên"
                 width="md"

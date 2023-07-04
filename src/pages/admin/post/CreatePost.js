@@ -37,6 +37,16 @@ const CreatePost = ({ old_post = {}, close }) => {
             });
         }
 
+        if (data.content == '' || !data.image || !data.title || !data.status) {
+            dispatch(
+                openSnackBar({
+                    message: 'Hãy điền đầy đủ thông tin',
+                    status: 'error'
+                })
+            );
+            return;
+        }
+
         try {
             if (data.id != null) {
                 await axiosInstance.put('post', data).then(async (res) => {

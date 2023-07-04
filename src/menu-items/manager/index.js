@@ -1,12 +1,13 @@
 // assets
 import { BlockOutlined } from '@ant-design/icons';
-import { UserOutlined, DashboardOutlined } from '@ant-design/icons';
+import { UserOutlined, DashboardOutlined, TeamOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
     BlockOutlined,
     UserOutlined,
-    DashboardOutlined
+    DashboardOutlined,
+    TeamOutlined
 };
 
 const manager = {
@@ -35,7 +36,7 @@ const manager = {
             title: 'Danh sách sinh viên',
             type: 'item',
             url: '/student-manager',
-            icon: icons.UserOutlined,
+            icon: icons.TeamOutlined,
             breadcrumbs: false
         },
         {

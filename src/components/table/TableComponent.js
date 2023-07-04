@@ -3,6 +3,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import { styled } from '@mui/material/styles';
 import { TablePagination } from '@mui/material/index';
 import { Typography } from '../../../node_modules/@mui/material/index';
+import { useSelector } from '../../../node_modules/react-redux/es/exports';
 
 // Tạo styled component cho bảng
 const TableCustom = styled(Table)`
@@ -39,10 +40,18 @@ const TableHeadCustom = styled(TableHead)`
     color: white;
 `;
 
-const TableComponent = ({ columns, data }) => {
+const TableComponent = ({ columns, data = [], key_search = '' }) => {
+    const { search } = useSelector((state) => state.menu);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const data_filter = data.filter((e) => {
+        if (key_search == '') return true;
 
+        if (e[key_search]) {
+            return e[key_search].toLowerCase().includes(search.toLowerCase());
+        }
+        return true;
+    });
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -53,7 +62,7 @@ const TableComponent = ({ columns, data }) => {
     };
 
     // Tính số hàng trống để hiển thị
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data_filter.length - page * rowsPerPage);
     const startItem = page * rowsPerPage;
     const endItem = page * rowsPerPage + rowsPerPage;
 
@@ -76,7 +85,7 @@ const TableComponent = ({ columns, data }) => {
                 {/* Nội dung bảng */}
                 <TableBody>
                     {/* Render các hàng từ mảng data */}
-                    {(rowsPerPage > 0 ? data.slice(startItem, endItem) : data).map((row) => (
+                    {(rowsPerPage > 0 ? data_filter.slice(startItem, endItem) : data_filter).map((row) => (
                         <TableRowCustom key={row.id}>
                             {/* Render các ô từ mảng columns */}
                             {columns.map((column, index) => (
@@ -92,7 +101,7 @@ const TableComponent = ({ columns, data }) => {
                     {emptyRows > 0 && <></>}
                 </TableBody>
             </TableCustom>
-            {data.length == 0 && (
+            {data_filter.length == 0 && (
                 <Typography variant="h5" sx={{ textAlign: 'center' }} py={5}>
                     Không có dữ liệu
                 </Typography>
@@ -102,7 +111,7 @@ const TableComponent = ({ columns, data }) => {
             <TablePagination
                 rowsPerPageOptions={[10, 25, 50]}
                 component="div"
-                count={data.length}
+                count={data_filter.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

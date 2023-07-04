@@ -83,7 +83,7 @@ const AdminPost = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <TableComponent columns={columns} data={postList} />
+            <TableComponent columns={columns} data={postList} key_search={'title'} />
             <CustomDialog
                 title="Bài viết"
                 width="sm"
