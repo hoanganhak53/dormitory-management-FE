@@ -93,6 +93,35 @@ const Arrange = ({ result = [], statistic = {}, close }) => {
                                     </Typography>
                                 </AccordionSummary>
                                 <AccordionDetails sx={{ paddingTop: '0px' }}>
+                                    <Typography variant="h5" sx={{ marginBottom: '10px' }}>
+                                        Câu trả lời phổ biến
+                                    </Typography>
+
+                                    {room?.description &&
+                                        room?.description.map((qa, qa_index) => (
+                                            <Grid
+                                                container
+                                                key={`des${qa_index}`}
+                                                alignItems="start"
+                                                mb={1}
+                                                pb={1}
+                                                justifyContent="space-between"
+                                                sx={{ borderBottom: '1px solid #ccc' }}
+                                            >
+                                                <Typography>{qa.question}</Typography>
+                                                <Grid item container xs={6}>
+                                                    {
+                                                        <Typography sx={{ marginLeft: '5px', color: 'text.secondary' }}>
+                                                            {qa?.answers.join(' - ')}
+                                                        </Typography>
+                                                    }
+                                                </Grid>
+                                            </Grid>
+                                        ))}
+                                    <Typography variant="h5" sx={{ marginBottom: '10px' }}>
+                                        Danh sách sinh viên
+                                    </Typography>
+
                                     {room?.students &&
                                         room?.students.map((student, student_index) => (
                                             <Grid
