@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-    baseURL: 'https://smart-ktx.bsa9e8h5bkhrbrbh.eastasia.azurecontainer.io/api/v1/'
+    baseURL: process.env.REACT_APP_URL
 });
 
 // Add a request interceptor

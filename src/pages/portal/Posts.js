@@ -7,6 +7,7 @@ export const Posts = () => {
     const [postList, setPostList] = useState([]);
 
     useEffect(() => {
+        let unsub = false;
         const init = async () => {
             try {
                 await axiosInstance.get(`post/list/1`).then(async (res) => {
@@ -14,9 +15,11 @@ export const Posts = () => {
                 });
             } catch (err) {}
         };
-        console.log('dddd');
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     return (
