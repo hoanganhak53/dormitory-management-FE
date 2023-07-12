@@ -14,6 +14,7 @@ export const Posts = () => {
                 });
             } catch (err) {}
         };
+        console.log('dddd');
 
         return init;
     }, []);
