@@ -12,8 +12,6 @@ import Transitions from 'components/@extended/Transitions';
 // assets
 import { MoreOutlined } from '@ant-design/icons';
 
-// ==============================|| HEADER CONTENT - MOBILE ||============================== //
-
 const MobileSection = () => {
     const theme = useTheme();
 

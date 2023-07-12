@@ -7,8 +7,6 @@ import { Box, List, Typography } from '@mui/material';
 // project import
 import NavItem from './NavItem';
 
-// ==============================|| NAVIGATION - LIST GROUP ||============================== //
-
 const NavGroup = ({ item }) => {
     const menu = useSelector((state) => state.menu);
     const { drawerOpen } = menu;

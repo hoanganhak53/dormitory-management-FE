@@ -7,8 +7,6 @@ import { Grid, Stack, Typography } from '@mui/material';
 import AuthRegister from './auth-forms/AuthRegister';
 import AuthWrapper from './AuthWrapper';
 
-// ================================|| REGISTER ||================================ //
-
 const Register = () => (
     <AuthWrapper>
         <Grid container spacing={3}>

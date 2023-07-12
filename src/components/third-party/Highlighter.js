@@ -14,8 +14,6 @@ import SyntaxHighlight from 'utils/SyntaxHighlight';
 // assets
 import { CodeOutlined, CopyOutlined } from '@ant-design/icons';
 
-// ==============================|| CLIPBOARD & HIGHLIGHTER   ||============================== //
-
 const Highlighter = ({ children }) => {
     const [highlight, setHighlight] = useState(false);
 

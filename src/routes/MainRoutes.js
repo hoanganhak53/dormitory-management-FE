@@ -29,11 +29,6 @@ const AdminPost = Loadable(lazy(() => import('pages/admin/post/AdminPost')));
 const Apartment = Loadable(lazy(() => import('pages/admin/apartment/Apartment')));
 const ARegistration = Loadable(lazy(() => import('pages/admin/a_registration/ARegistration')));
 
-// render - utilities
-const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
-const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
-
-// ==============================|| MAIN ROUTING ||============================== //
 const role = localStorage.getItem('role');
 
 const MainRoutes = {
@@ -109,10 +104,6 @@ const MainRoutes = {
             element: <AdminForm />
         },
         {
-            path: 'typography',
-            element: <Typography />
-        },
-        {
             path: 'student-manager',
             element: <ManagerStudent />
         },
@@ -128,7 +119,7 @@ switch (role) {
     case '1':
         MainRoutes.children.push({
             path: 'color',
-            element: <Color />
+            element: <></>
         });
         break;
     case '2':

@@ -8,8 +8,6 @@ import { ButtonBase } from '@mui/material';
 import Logo from './Logo';
 import config from 'config';
 
-// ==============================|| MAIN LOGO ||============================== //
-
 const LogoSection = ({ sx, to }) => (
     <ButtonBase disableRipple component={Link} to={!to ? config.defaultPath : to} sx={sx}>
         <Logo />
