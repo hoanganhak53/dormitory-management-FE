@@ -28,6 +28,8 @@ const ManagerStudent = () => {
     });
 
     React.useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.get(`apartment/registration/${apartment_id}`).then((res) => {
@@ -38,7 +40,11 @@ const ManagerStudent = () => {
             } catch (err) {}
         };
 
-        return init;
+        init();
+
+        return () => {
+            unsub = true;
+        };
     }, [openDialog]);
 
     const columns = [

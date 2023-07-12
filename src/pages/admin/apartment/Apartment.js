@@ -33,6 +33,8 @@ const Apartment = () => {
     };
 
     useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.get('room_type/list').then((res) => {
@@ -51,8 +53,11 @@ const Apartment = () => {
                 });
             } catch (err) {}
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, [openDialog]);
 
     const columns = [

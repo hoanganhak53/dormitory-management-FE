@@ -77,6 +77,7 @@ const ARegistration = () => {
     ];
 
     useEffect(() => {
+        let unsub = false;
         const init = async () => {
             try {
                 await axiosInstance.get('registration/list').then(async (res) => {
@@ -84,8 +85,11 @@ const ARegistration = () => {
                 });
             } catch (err) {}
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, [openDialog]);
 
     return (

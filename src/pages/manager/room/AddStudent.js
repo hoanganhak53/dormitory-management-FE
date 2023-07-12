@@ -18,6 +18,8 @@ const AddStudent = ({ room_id, apartment_id, room_type_id, close }) => {
     const [students, setStudents] = useState([]);
     const dispatch = useDispatch();
     React.useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 const body = {
@@ -29,8 +31,11 @@ const AddStudent = ({ room_id, apartment_id, room_type_id, close }) => {
                 });
             } catch (err) {}
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     if (students.length == 0) {

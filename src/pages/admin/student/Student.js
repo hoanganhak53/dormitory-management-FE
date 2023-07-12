@@ -73,6 +73,8 @@ const Student = () => {
     ];
 
     useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.post('user_type/students/all').then(async (res) => {
@@ -80,8 +82,10 @@ const Student = () => {
                 });
             } catch (err) {}
         };
-
-        return init;
+        init();
+        return () => {
+            unsub = true;
+        };
     }, [openDialog]);
 
     return (

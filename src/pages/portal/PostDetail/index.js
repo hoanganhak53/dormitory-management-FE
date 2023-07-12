@@ -13,6 +13,8 @@ const PostDetail = () => {
     const [postList, setPostList] = useState([]);
 
     useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.get(`post/detail/${param.id}`).then(async (res) => {
@@ -25,7 +27,11 @@ const PostDetail = () => {
             } catch (err) {}
         };
 
-        return init;
+        init();
+
+        return () => {
+            unsub = true;
+        };
     }, []);
     return (
         <>

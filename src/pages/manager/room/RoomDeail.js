@@ -17,6 +17,8 @@ const RoomDetail = ({ viewDetail, apartment, room }) => {
     const [refresh, setRefresh] = React.useState(false);
 
     React.useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.get(`room/detail/${room.id}`).then((res) => {
@@ -24,8 +26,11 @@ const RoomDetail = ({ viewDetail, apartment, room }) => {
                 });
             } catch (err) {}
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, [openDialog, refresh]);
 
     const removeStudent = async (e) => {

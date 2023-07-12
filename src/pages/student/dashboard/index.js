@@ -10,6 +10,7 @@ const DashboardDefault = () => {
     const [overview, setOverview] = useState({});
 
     useEffect(() => {
+        let unsub = false;
         const init = async () => {
             try {
                 await axiosInstance.get('auth/overview').then((res) => {
@@ -18,8 +19,11 @@ const DashboardDefault = () => {
                 });
             } catch (err) {}
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     return (

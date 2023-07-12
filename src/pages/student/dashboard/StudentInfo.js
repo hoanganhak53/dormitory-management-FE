@@ -18,6 +18,8 @@ const StudentInfo = () => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
+        let unsub = false;
+
         const me = async () => {
             try {
                 await axiosInstance.get('profile/me').then((res) => {
@@ -26,8 +28,11 @@ const StudentInfo = () => {
                 });
             } catch (err) {}
         };
+        me();
 
-        return me;
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     return (

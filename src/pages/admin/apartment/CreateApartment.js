@@ -12,6 +12,8 @@ const CreateApartment = ({ apartment = {}, close }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.get('user_type/2').then((res) => {
@@ -20,7 +22,11 @@ const CreateApartment = ({ apartment = {}, close }) => {
                 });
             } catch (err) {}
         };
-        return init;
+        init();
+
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     const submit = async () => {

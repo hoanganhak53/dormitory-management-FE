@@ -29,6 +29,8 @@ const AccountProfile = () => {
     const [user, setUser] = useState({});
     const dispatch = useDispatch();
     useEffect(() => {
+        let unsub = false;
+
         const me = async () => {
             try {
                 await axiosInstance.get('profile/me').then((res) => {
@@ -37,8 +39,11 @@ const AccountProfile = () => {
                 });
             } catch (err) {}
         };
+        me();
 
-        return me;
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     if (role != 1) {

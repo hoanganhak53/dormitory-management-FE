@@ -10,6 +10,7 @@ const RegistrationCurrent = () => {
     const [room, setRoom] = React.useState([]);
 
     React.useEffect(() => {
+        let unsub = false;
         const init = async () => {
             try {
                 await axiosInstance.get('student_room/current').then(async (res) => {
@@ -18,8 +19,11 @@ const RegistrationCurrent = () => {
                 });
             } catch (err) {}
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     const columns = [

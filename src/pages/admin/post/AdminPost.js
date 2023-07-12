@@ -14,6 +14,7 @@ const AdminPost = () => {
     const [post, setPost] = React.useState({});
 
     useEffect(() => {
+        let unsub = false;
         const init = async () => {
             try {
                 await axiosInstance.get('post/list/all').then(async (res) => {
@@ -22,7 +23,10 @@ const AdminPost = () => {
             } catch (err) {}
         };
 
-        return init;
+        init();
+        return () => {
+            unsub = true;
+        };
     }, [openDialog]);
 
     const columns = [

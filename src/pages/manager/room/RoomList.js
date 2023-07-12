@@ -26,6 +26,8 @@ const RoomList = () => {
 
     useEffect(() => {
         setSelected([]);
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.get(`apartment/${apartment_id}`).then((res) => {
@@ -35,8 +37,11 @@ const RoomList = () => {
                 });
             } catch (err) {}
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, [page]);
 
     const viewDetail = (page, roomDetail) => {

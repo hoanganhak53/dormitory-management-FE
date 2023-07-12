@@ -12,6 +12,8 @@ const StudentPopup = ({ user, close }) => {
     const [student, setStudent] = React.useState({});
 
     useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.get(`profile/${user.id}`).then(async (res) => {
@@ -20,8 +22,11 @@ const StudentPopup = ({ user, close }) => {
                 });
             } catch (err) {}
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     const submit = async () => {

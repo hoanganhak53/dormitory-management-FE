@@ -14,6 +14,7 @@ const RegistrationSemester = () => {
     const [registrations, setRegistrations] = React.useState([]);
 
     React.useEffect(() => {
+        let unsub = false;
         const init = async () => {
             try {
                 await axiosInstance.get('student/registration_list').then(async (res) => {
@@ -22,7 +23,10 @@ const RegistrationSemester = () => {
             } catch (err) {}
         };
 
-        return init;
+        init();
+        return () => {
+            unsub = true;
+        };
     }, [openDialog]);
 
     const columns = [

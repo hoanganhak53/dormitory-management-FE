@@ -22,6 +22,8 @@ export const AdminForm = () => {
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
+        let unsub = false;
+
         const init = async () => {
             try {
                 await axiosInstance.get('form/list').then(async (res) => {
@@ -30,7 +32,11 @@ export const AdminForm = () => {
             } catch (err) {}
         };
 
-        return init;
+        init();
+
+        return () => {
+            unsub = true;
+        };
     }, [openDialog, refresh]);
 
     const deleteQA = async (e) => {

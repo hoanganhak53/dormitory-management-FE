@@ -20,6 +20,7 @@ const RegisterRoom = ({ close }) => {
     const dispatch = useDispatch();
 
     React.useEffect(() => {
+        let unsub = false;
         const init = async () => {
             try {
                 await axiosInstance.get('registration/current').then(async (res) => {
@@ -39,8 +40,11 @@ const RegisterRoom = ({ close }) => {
                 );
             }
         };
+        init();
 
-        return init;
+        return () => {
+            unsub = true;
+        };
     }, []);
 
     const submit = async () => {
