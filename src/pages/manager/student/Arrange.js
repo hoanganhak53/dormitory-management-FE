@@ -9,6 +9,12 @@ import { Button, Divider, Typography } from '../../../../node_modules/@mui/mater
 import { axiosInstance } from 'utils/auth-header';
 import { useDispatch } from '../../../../node_modules/react-redux/es/exports';
 import { openSnackBar } from 'store/reducers/menu';
+import { useEffect, useState } from 'react';
+// material-ui
+import { useTheme } from '@mui/material/styles';
+// third-party
+import ReactApexChart from 'react-apexcharts';
+import PropTypes from 'prop-types';
 
 const StatisticCard = styled('div')`
     display: flex;
@@ -28,9 +34,76 @@ const StatisticCard = styled('div')`
     }
 `;
 
+const areaChartOptions = {
+    chart: {
+        height: 450,
+        type: 'area',
+        toolbar: {
+            show: false
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        curve: 'smooth',
+        width: 2
+    },
+    grid: {
+        strokeDashArray: 0
+    }
+};
+
 const Arrange = ({ result = [], statistic = {}, close }) => {
     const [expanded, setExpanded] = React.useState('panel0');
     const dispatch = useDispatch();
+
+    const theme = useTheme();
+    const { primary, secondary } = theme.palette.text;
+    const line = theme.palette.divider;
+
+    const [options, setOptions] = useState(areaChartOptions);
+
+    useEffect(() => {
+        setOptions((prevState) => ({
+            ...prevState,
+            colors: [theme.palette.primary.main, theme.palette.primary[700]],
+            xaxis: {
+                categories: Array.from(Array(statistic.loss.length).keys()).map((x) => x + 1),
+                labels: {
+                    style: {
+                        colors: [secondary]
+                    }
+                },
+                axisBorder: {
+                    show: true,
+                    color: line
+                },
+                tickAmount: statistic.loss.length
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: [secondary]
+                    }
+                }
+            },
+            grid: {
+                borderColor: line
+            },
+            tooltip: {
+                theme: 'light'
+            }
+        }));
+    }, [primary, secondary, line, theme]);
+
+    const series = [
+        {
+            name: 'Loop',
+            data: statistic.loss.map((e) => e.toFixed(6))
+        }
+    ];
+
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -76,6 +149,18 @@ const Arrange = ({ result = [], statistic = {}, close }) => {
                     <div className="statistic-label">Đã sắp xếp:</div>
                     <div className="statistic-value">{statistic.student_num} sinh viên</div>
                 </StatisticCard>
+                <StatisticCard>
+                    <div className="statistic-label">Số vòng lắp:</div>
+                    <div className="statistic-value">{statistic.loop} vòng</div>
+                </StatisticCard>
+                <StatisticCard>
+                    <div className="statistic-label">Epsilon:</div>
+                    <div className="statistic-value">{statistic.epsilon}</div>
+                </StatisticCard>
+            </Grid>
+            <Grid item xs={12} mb={3}>
+                <ReactApexChart options={options} series={series} type="area" height={450} />
+                <Typography sx={{ width: '100%', textAlign: 'center', fontWeight: '600' }}>Đồ thị hàm lỗi</Typography>
             </Grid>
             {result.length != 0 &&
                 result.map((room, index) => {
