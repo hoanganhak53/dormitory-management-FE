@@ -5,7 +5,7 @@ import { Chip } from '@mui/material/index';
 import CustomDialog from 'components/CustomDialog';
 import { axiosInstance } from 'utils/auth-header';
 import { formatGender, formatMajor } from 'utils/fomat';
-import { IconButton } from '../../../../node_modules/@mui/material/index';
+import { FormLabel, IconButton } from '../../../../node_modules/@mui/material/index';
 import { EditOutlined } from '@ant-design/icons';
 import EditStatus from './EditStatus';
 import { openSnackBar } from 'store/reducers/menu';
@@ -211,12 +211,18 @@ export default ManagerStudent;
 
 const Confirmation = ({ setOpenDialog, room_type_name, apartment_id, setDialogContent }) => {
     const dispatch = useDispatch();
+    const [fuzzy_m, setFuzzyM] = React.useState(2);
+    const [max_loop, setMaxLoop] = React.useState(50);
+    const [epsilon, setEpsilon] = React.useState(0.000001);
 
     const submit = async () => {
         try {
             const data = {
                 room_type_name,
-                apartment_id
+                apartment_id,
+                fuzzy_m,
+                max_loop,
+                epsilon
             };
             await axiosInstance.post('apartment/cluster', data).then(async (res) => {
                 setDialogContent({
@@ -239,6 +245,35 @@ const Confirmation = ({ setOpenDialog, room_type_name, apartment_id, setDialogCo
             <Grid container mb={2}>
                 <Typography variant="h5">Bạn có muốn sắp xếp sinh viên không?</Typography>
                 <Typography>Chú ý chỉ sắp xếp các sinh viên đã đăng ký loại phòng hiện tại và đã nộp tiền.</Typography>
+            </Grid>
+            <Grid container mb={2} justifyContent="start">
+                <FormLabel>Hệ số mờ hóa</FormLabel>
+                <TextField
+                    type="text"
+                    value={fuzzy_m}
+                    onChange={(e) => setFuzzyM(e.target.value)}
+                    placeholder="Hệ số mờ hóa"
+                    fullWidth
+                    sx={{ marginTop: '10px', marginBottom: '20px' }}
+                />
+                <FormLabel>Số vòng lặp tối đa</FormLabel>
+                <TextField
+                    type="text"
+                    value={max_loop}
+                    onChange={(e) => setMaxLoop(e.target.value)}
+                    placeholder="Số vòng lặp tối đa"
+                    fullWidth
+                    sx={{ marginTop: '10px', marginBottom: '20px' }}
+                />
+                <FormLabel>Điểm dừng</FormLabel>
+                <TextField
+                    type="text"
+                    value={epsilon}
+                    onChange={(e) => setEpsilon(e.target.value)}
+                    placeholder="Điểm dừng"
+                    fullWidth
+                    sx={{ marginTop: '10px', marginBottom: '20px' }}
+                />
             </Grid>
             <Divider />
             <Grid container mt={1.5} justifyContent="end">

@@ -150,6 +150,14 @@ const Arrange = ({ result = [], statistic = {}, close }) => {
                     <div className="statistic-value">{statistic.student_num} sinh viên</div>
                 </StatisticCard>
                 <StatisticCard>
+                    <div className="statistic-label">Số vòng lặp tối đa:</div>
+                    <div className="statistic-value">{statistic.max_loop} vòng</div>
+                </StatisticCard>
+                <StatisticCard>
+                    <div className="statistic-label">Hệ số mờ:</div>
+                    <div className="statistic-value">{statistic.fuzzy_m}</div>
+                </StatisticCard>
+                <StatisticCard>
                     <div className="statistic-label">Số vòng lắp:</div>
                     <div className="statistic-value">{statistic.loop} vòng</div>
                 </StatisticCard>
