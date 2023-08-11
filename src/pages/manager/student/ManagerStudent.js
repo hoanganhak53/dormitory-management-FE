@@ -214,6 +214,7 @@ const Confirmation = ({ setOpenDialog, room_type_name, apartment_id, setDialogCo
     const [fuzzy_m, setFuzzyM] = React.useState(2);
     const [max_loop, setMaxLoop] = React.useState(50);
     const [epsilon, setEpsilon] = React.useState(0.000001);
+    const [algorithm, setAlgorithm] = React.useState(1);
 
     const submit = async () => {
         try {
@@ -222,7 +223,8 @@ const Confirmation = ({ setOpenDialog, room_type_name, apartment_id, setDialogCo
                 apartment_id,
                 fuzzy_m,
                 max_loop,
-                epsilon
+                epsilon,
+                algorithm
             };
             await axiosInstance.post('apartment/cluster', data).then(async (res) => {
                 setDialogContent({
@@ -274,6 +276,19 @@ const Confirmation = ({ setOpenDialog, room_type_name, apartment_id, setDialogCo
                     fullWidth
                     sx={{ marginTop: '10px', marginBottom: '20px' }}
                 />
+                <FormLabel htmlFor="gender" sx={{ width: '150px' }}>
+                    Thuật toán
+                </FormLabel>
+                <TextField
+                    select
+                    value={algorithm}
+                    onChange={(e) => setAlgorithm(e.target.value)}
+                    fullWidth
+                    sx={{ marginTop: '10px', marginBottom: '20px' }}
+                >
+                    <MenuItem value={1}>Fuzzy C-Means</MenuItem>
+                    <MenuItem value={2}>K-Means</MenuItem>
+                </TextField>
             </Grid>
             <Divider />
             <Grid container mt={1.5} justifyContent="end">

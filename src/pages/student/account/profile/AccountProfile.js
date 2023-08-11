@@ -179,7 +179,7 @@ const AccountProfile = () => {
                     gender: user.gender || 1,
                     batch: user.batch || 64,
                     phonenumber: user.phonenumber || '',
-                    birth: user.birth || '2012-12-27',
+                    birth: user.birth || '2001-10-09',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
